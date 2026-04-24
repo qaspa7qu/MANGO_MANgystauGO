@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="MainBoss.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
+    
+    <style>
+        /* Базовые сбросы для адаптивности */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        /* Оранжевая шапка на всю ширину */
+        .rectangle-parent {
+            background-color: #ff6a00;
+            width: 100%;
+            height: 84px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Центрируем внутренний контент */
+        }
+
+        /* Контейнер внутри шапки, который держит элементы по краям */
+        .header-content {
+            width: 95%;
+            max-width: 1400px; /* Чтобы на огромных мониторах лого не улетало слишком далеко */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Стили для блока поиска */
+        .search-area {
+            width: 95%;
+            max-width: 1400px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 320px; /* Левая часть тянется, правая (кнопки) — фиксированная */
+            gap: 20px;
+        }
+
+        .search-bar-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Сделаем поле поиска гибким */
+        .group-child2 {
+            width: 100%;
+            height: 52px;
+            border-radius: 10px;
+            border: 1px solid #bebebe;
+            padding-left: 20px;
+            box-sizing: border-box;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tab-button {
+            border: 1px solid #bebebe;
+            border-radius: 10px;
+            padding: 8px 40px;
+            background: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Правые боковые кнопки */
+        .side-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-button {
+            height: 45px;
+            border-radius: 10px;
+            border: 1px solid #bebebe;
+            background: #e6e6e6;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #424242;
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="rectangle-parent">
+    <div class="header-content">
+        <img class="logo-white-1-icon" src="logowhite.png" alt="MANGystau GO">
+        
+        <div class="user-controls">
+            <div class="group-parent">
+                <div class="group-item">
+                    <div class="active-lang-bg"></div>
+                    <div class="lang-text ru active">RU</div>
+                    <div class="lang-text kz">KZ</div>
+                </div>
+            </div>
+            <div class="ellipse-div"></div>
+        </div>
+    </div>
+</header>
+
+    <main class="search-area">
+    <div class="left-column">
+        <div class="search-bar-container">
+            <input type="text" class="group-child2" placeholder="Поиск">
+            <div class="group-child6">
+                <img class="search-icon" src="search.png" alt="search">
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tab-button">Лучшие</div>
+            <div class="tab-button">Пол</div>
+            <div class="tab-button">Возраст</div>
+        </div>
+    </div>
+
+    <aside class="sidebar-column">
+        <div class="action-group">
+            <div class="action-btn gray">
+                <img src="slider.png" alt="" width="20"> 
+                <span>Расширенный поиск</span>
+            </div>
+            <div class="action-btn">
+                <img src="plus.png" alt="" width="20"> 
+                <span>Добавить вакансию</span>
+            </div>
+        </div>
+
+         <div class="filter-container">
+    <div class="filter-header">Все неразобранные</div>
+    <div class="filter-button">
+        Подходящие отклики
+    </div>
+</div>
+            
+            <div class="status-list">
+                <div class="status-item">Подумать</div>
+                <div class="status-item">Телефонное интервью</div>
+                <div class="status-item">Оценка</div>
+                <div class="status-item">Интервью</div>
+                <div class="status-item">Предложение о работе</div>
+                <div class="status-item">Выход на работу</div>
+                <div class="status-item">Отказ</div>
+            </div>
+
+            <button class="auto-btn">Авторазбор</button>
+        </div>
+    </aside>
+</main>
+

@@ -1,0 +1,294 @@
+.div {
+    width: 100%;
+    height: 832px;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+    text-align: center;
+    font-size: 20px;
+    color: #000;
+    font-family: 'Public Sans';
+}
+.rectangle-parent {
+    position: absolute;
+    top: 154px;
+    left: 446px;
+    width: 388px;
+    height: 469px;
+}
+.group-child {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    box-shadow: 0px 4px 5px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    background-color: #fff;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 388px;
+    height: 469px;
+}
+.mango-textlogo-png-1-icon {
+    position: absolute;
+    top: 24px;
+    left: 86px;
+    width: 216px;
+    height: 102px;
+    object-fit: cover;
+}
+.child {
+    position: absolute;
+    top: 268px;
+    left: 470px;
+    background-color: #d9d9d9;
+    width: 340px;
+    height: 76px;
+    display: none;
+}
+.group-parent {
+    position: absolute;
+    top: 68px;
+    left: 446px;
+    width: 388px;
+    height: 48px;
+    font-size: 14px;
+    color: #767676;
+}
+.rectangle-wrapper {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 388px;
+    height: 48px;
+}
+.group-item {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    box-shadow: 0px 4px 5px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    background-color: #e6e6e6;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 388px;
+    height: 48px;
+}
+.div2 {
+    position: absolute;
+    top: 16px;
+    left: 229px;
+    font-weight: 500;
+    display: inline-block;
+    width: 119px;
+    height: 16px;
+}
+.rectangle-group {
+    position: absolute;
+    top: 72px;
+    left: 452px;
+    width: 180px;
+    height: 40px;
+    font-size: 14px;
+}
+.group-inner {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 180px;
+    height: 40px;
+}
+.div3 {
+    position: absolute;
+    top: 12px;
+    left: 47px;
+    font-weight: 500;
+    display: inline-block;
+    width: 85px;
+    height: 16px;
+}
+.group-container {
+    position: absolute;
+    top: 68px;
+    left: 965px;
+    width: 178px;
+    height: 48px;
+    font-size: 14px;
+    color: #767676;
+}
+.rectangle-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 178px;
+    height: 48px;
+}
+.rectangle-div {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    box-shadow: 0px 4px 5px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    background-color: #e6e6e6;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 178px;
+    height: 48px;
+}
+.kz {
+    position: absolute;
+    top: 16px;
+    left: 105.06px;
+    font-weight: 500;
+    display: inline-block;
+    width: 54.6px;
+    height: 16px;
+}
+.group-div {
+    position: absolute;
+    top: 4px;
+    left: 4.13px;
+    width: 82.6px;
+    height: 40px;
+    color: #000;
+}
+.group-child2 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 82.6px;
+    height: 40px;
+}
+.ru {
+    position: absolute;
+    top: 12px;
+    left: 21.56px;
+    font-weight: 500;
+    display: inline-block;
+    width: 39px;
+    height: 16px;
+}
+.div4 {
+    position: absolute;
+    top: 294px;
+    left: 470px;
+    font-weight: 500;
+    display: inline-block;
+    width: 340px;
+    height: 24px;
+}
+.rectangle-parent2 {
+    position: absolute;
+    top: 359px;
+    left: 469px;
+    width: 341px;
+    height: 59px;
+}
+.group-child3 {
+    position: absolute;
+    top: 0px;
+    left: 101px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 240px;
+    height: 59px;
+}
+.group-child4 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    width: 90px;
+    height: 59px;
+}
+.div5 {
+    position: absolute;
+    top: 18px;
+    left: 45px;
+    font-weight: 500;
+    display: inline-block;
+    width: 39px;
+    height: 24px;
+}
+.kazakhstan-icon {
+    position: absolute;
+    top: 8px;
+    left: 6px;
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+}
+.rectangle-parent3 {
+    position: absolute;
+    top: 433px;
+    left: 470px;
+    width: 340px;
+    height: 59px;
+    color: #fff;
+}
+.group-child5 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+    background-color: #ff6a00;
+    width: 340px;
+    height: 59px;
+}
+.div6 {
+    position: absolute;
+    top: 18px;
+    left: 0px;
+    font-weight: 500;
+    display: inline-block;
+    width: 340px;
+    height: 24px;
+}
+.rectangle-parent4 {
+    position: absolute;
+    top: 507px;
+    left: 470px;
+    width: 341px;
+    height: 59px;
+    text-align: left;
+    color: #424242;
+}
+.group-child6 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+    background-color: #e6e6e6;
+    width: 340px;
+    height: 59px;
+}
+.div7 {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    font-weight: 500;
+    display: inline-block;
+    width: 321px;
+    height: 24px;
+}
+.google-icon {
+    position: absolute;
+    top: 12px;
+    left: 283px;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+
