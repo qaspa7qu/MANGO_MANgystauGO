@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход для Работодателя</title>
+    <link rel="stylesheet" href="RegisterBoss.css" />
+    <style>
+        body { margin:0; padding:0; background-color:#f4f4f4; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family: 'Public Sans', sans-serif; }
+        .login-card { width: 400px; background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        .input-field { width: 100%; height: 50px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd; padding: 0 15px; box-sizing: border-box; font-size: 16px; }
+        .btn-login { width: 100%; height: 50px; background-color: #ff6a00; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .btn-login:hover { background-color: #e65f00; }
+        .error-msg { color: #e53535; font-size: 14px; margin-top: -15px; margin-bottom: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2 style="margin-bottom: 30px;">Вход для Бизнеса</h2>
+        <input type="email" id="email" class="input-field" placeholder="Электронная почта">
+        <div id="email-error" class="error-msg">Неверный email</div>
+        
+        <input type="password" id="password" class="input-field" placeholder="Пароль">
+        <div id="pass-error" class="error-msg">Неверный пароль</div>
+        
+        <button class="btn-login" onclick="handleLogin()">Войти</button>
+        <p style="margin-top: 20px;">Нет аккаунта? <a href="RegisterBoss.html" style="color: #ff6a00;">Зарегистрироваться</a></p>
+    </div>
+
+    <script type="module">
+        // Здесь будет инициализация Firebase
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            
+            // Временная логика для теста (пока не подключен Firebase)
+            if(email && pass.length >= 6) {
+                localStorage.setItem('currentUser', JSON.stringify({ type: 'boss', email: email }));
+                window.location.href = 'MainBoss.html';
+            } else {
+                alert('Введите корректные данные');
+            }
+        }
+        window.handleLogin = handleLogin;
+    </script>
+    
+</body>
+
+
+</html>
