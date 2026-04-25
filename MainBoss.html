@@ -7,109 +7,200 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
     
     <style>
-        /* Базовые сбросы для адаптивности */
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
+            margin: 0; padding: 0;
+            width: 100%; overflow-x: hidden;
             font-family: 'Public Sans', sans-serif;
         }
 
-        /* Оранжевая шапка на всю ширину */
+        /* ── Шапка ── */
         .rectangle-parent {
             background-color: #ff6a00;
-            width: 100%;
-            height: 84px;
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Центрируем внутренний контент */
+            width: 100%; height: 84px;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        /* Контейнер внутри шапки, который держит элементы по краям */
         .header-content {
-            width: 95%;
-            max-width: 1400px; /* Чтобы на огромных мониторах лого не улетало слишком далеко */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
+            width: 95%; max-width: 1400px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .right-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* Стили для блока поиска */
+        /* ── Сетка ── */
         .search-area {
-            width: 95%;
-            max-width: 1400px;
+            width: 95%; max-width: 1400px;
             margin: 20px auto;
             display: grid;
-            grid-template-columns: 1fr 320px; /* Левая часть тянется, правая (кнопки) — фиксированная */
+            grid-template-columns: 1fr 320px;
             gap: 20px;
         }
 
         .search-bar-container {
-            position: relative;
-            display: flex;
-            align-items: center;
+            position: relative; display: flex; align-items: center;
         }
-
-        /* Сделаем поле поиска гибким */
         .group-child2 {
-            width: 100%;
-            height: 52px;
-            border-radius: 10px;
-            border: 1px solid #bebebe;
-            padding-left: 20px;
-            box-sizing: border-box;
+            width: 100%; height: 52px;
+            border-radius: 10px; border: 1px solid #bebebe;
+            padding-left: 20px; box-sizing: border-box;
+            font-family: 'Public Sans', sans-serif; font-size: 16px; outline: none;
         }
+        .group-child2:focus { border-color: #ff6a00; }
 
-        .tabs-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
+        .tabs-container { display: flex; gap: 10px; margin-top: 15px; }
         .tab-button {
-            border: 1px solid #bebebe;
-            border-radius: 10px;
-            padding: 8px 40px;
-            background: white;
-            font-weight: 500;
-            cursor: pointer;
+            border: 1px solid #bebebe; border-radius: 10px;
+            padding: 8px 40px; background: white;
+            font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; transition: all 0.2s;
+        }
+        .tab-button:hover, .tab-button.active {
+            background: #ff6a00; color: #fff; border-color: #ff6a00;
         }
 
-        /* Правые боковые кнопки */
-        .side-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        /* ── Правая колонка ── */
+        .sidebar-column {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .action-btn {
+            height: 48px; border-radius: 10px;
+            border: 1px solid #bebebe; background: #e6e6e6;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 15px; font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; color: #424242;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background: #d5d5d5; }
+        .action-btn.white { background: white; }
+        .action-btn.white:hover { background: #f5f5f5; }
+
+        /* ── Статусы ── */
+        .filter-container {
+            border: 1px solid #bebebe; border-radius: 10px;
+            overflow: hidden;
+        }
+        .filter-header {
+            background: #f5f5f5; padding: 10px 15px;
+            font-weight: 600; font-size: 14px; border-bottom: 1px solid #bebebe;
+        }
+        .filter-button {
+            padding: 10px 15px; font-size: 14px;
+            cursor: pointer; color: #ff6a00; font-weight: 500;
+        }
+        .filter-button:hover { background: #fff5ee; }
+        .status-list { display: flex; flex-direction: column; }
+        .status-item {
+            padding: 9px 15px; font-size: 14px;
+            border-top: 1px solid #f0f0f0; cursor: pointer; color: #424242;
+            transition: background 0.15s;
+        }
+        .status-item:hover { background: #fff5ee; color: #ff6a00; }
+        .auto-btn {
+            width: 100%; padding: 12px; border-radius: 10px;
+            background: #ff6a00; color: #fff; border: none;
+            font-family: 'Public Sans', sans-serif; font-size: 15px;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+        }
+        .auto-btn:hover { background: #e05e00; }
+
+        /* ══════════════════════════════════════════════
+           РАСШИРЕННЫЙ ПОИСК
+        ══════════════════════════════════════════════ */
+        .adv-wrapper { position: relative; }
+
+        .advanced-search-btn {
+            width: 100%; height: 48px;
+            background: #e6e6e6; border: 1px solid #bebebe; border-radius: 10px;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 15px; font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; color: #424242;
+            transition: all 0.2s; box-sizing: border-box;
+            position: relative; z-index: 101;
+        }
+        .advanced-search-btn.open {
+            border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+            background: #fff; border-bottom-color: transparent;
         }
 
-        .action-button {
-            height: 45px;
-            border-radius: 10px;
-            border: 1px solid #bebebe;
-            background: #e6e6e6;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            font-weight: 500;
-            text-decoration: none;
-            color: #424242;
+        .dropdown-panel {
+            display: none;
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: #fff; border: 1px solid #bebebe;
+            border-top: none;
+            border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+            z-index: 100; padding: 14px; box-sizing: border-box;
+        }
+        .dropdown-panel.show { display: block; }
+
+        .filter-section { margin-bottom: 14px; }
+        .filter-title {
+            font-size: 11px; font-weight: 700; color: #9e9e9e;
+            letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;
+        }
+
+        .scroll-area {
+            max-height: 150px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 5px; padding-right: 4px;
+        }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #ff6a00; border-radius: 10px; }
+
+        .checkbox-item {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; font-size: 13px; color: #424242; padding: 3px 0;
+        }
+        .checkbox-item input {
+            accent-color: #ff6a00; width: 15px; height: 15px;
+            cursor: pointer; flex-shrink: 0;
+        }
+
+        /* Ползунок зарплаты */
+        .salary-range {
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .salary-inputs {
+            display: flex; gap: 8px; align-items: center;
+        }
+        .salary-inputs input[type="number"] {
+            width: 100%; height: 34px; border-radius: 8px;
+            border: 1px solid #bebebe; padding: 0 8px;
+            font-family: 'Public Sans', sans-serif; font-size: 13px;
+            box-sizing: border-box; outline: none;
+        }
+        .salary-inputs input[type="number"]:focus { border-color: #ff6a00; }
+        .salary-inputs span { color: #9e9e9e; font-size: 13px; flex-shrink: 0; }
+
+        .apply-btn {
+            width: 100%; background: #ff6a00; color: #fff;
+            border: none; padding: 10px; border-radius: 8px;
+            margin-top: 6px; font-weight: 600; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; font-size: 14px;
+            transition: background 0.2s;
+        }
+        .apply-btn:hover { background: #e05e00; }
+
+        /* Тэги */
+        #tag-container {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px;
+        }
+        .tag {
+            background: #ff6a00; color: #fff;
+            padding: 4px 10px; border-radius: 20px;
+            font-size: 12px; font-weight: 500;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .tag-x { cursor: pointer; font-weight: 700; opacity: 0.8; }
+        .tag-x:hover { opacity: 1; }
+
+        /* Разделитель секций */
+        .section-divider {
+            border: none; border-top: 1px solid #f0f0f0; margin: 4px 0 10px;
         }
     </style>
 </head>
 <body>
-    
-    <header class="rectangle-parent">
+
+<header class="rectangle-parent">
     <div class="header-content">
         <img class="logo-white-1-icon" src="logowhite.png" alt="MANGystau GO">
-        
         <div class="user-controls">
             <div class="group-parent">
                 <div class="group-item">
@@ -123,41 +214,141 @@
     </div>
 </header>
 
-    <main class="search-area">
+<main class="search-area">
+
+    <!-- ── Левая колонка ── -->
     <div class="left-column">
         <div class="search-bar-container">
-            <input type="text" class="group-child2" placeholder="Поиск">
+            <input type="text" class="group-child2" placeholder="Поиск резюме">
             <div class="group-child6">
                 <img class="search-icon" src="search.png" alt="search">
             </div>
         </div>
-
         <div class="tabs-container">
-            <div class="tab-button">Лучшие</div>
+            <div class="tab-button active">Лучшие</div>
             <div class="tab-button">Пол</div>
             <div class="tab-button">Возраст</div>
         </div>
     </div>
 
+    <!-- ── Правая колонка ── -->
     <aside class="sidebar-column">
-        <div class="action-group">
-            <div class="action-btn gray">
-                <img src="slider.png" alt="" width="20"> 
+
+        <!-- РАСШИРЕННЫЙ ПОИСК -->
+        <div class="adv-wrapper">
+            <div class="advanced-search-btn" id="advBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>
+                </svg>
                 <span>Расширенный поиск</span>
             </div>
-            <div class="action-btn">
-                <img src="plus.png" alt="" width="20"> 
-                <span>Добавить вакансию</span>
+
+            <div class="dropdown-panel" id="advDropdown">
+
+                <!-- Опыт работы -->
+                <div class="filter-section">
+                    <div class="filter-title">Опыт работы</div>
+                    <div class="scroll-area" style="max-height:unset; overflow:visible;">
+                        <label class="checkbox-item"><input type="checkbox" value="Без опыта"> Без опыта</label>
+                        <label class="checkbox-item"><input type="checkbox" value="До 1 года"> До 1 года</label>
+                        <label class="checkbox-item"><input type="checkbox" value="1–3 года"> 1–3 года</label>
+                        <label class="checkbox-item"><input type="checkbox" value="3–6 лет"> 3–6 лет</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Более 6 лет"> Более 6 лет</label>
+                    </div>
+                </div>
+                <hr class="section-divider">
+
+                <!-- Ключевые навыки -->
+                <div class="filter-section">
+                    <div class="filter-title">Ключевые навыки</div>
+                    <div class="scroll-area">
+                        <label class="checkbox-item"><input type="checkbox" value="Microsoft Office"> Microsoft Office</label>
+                        <label class="checkbox-item"><input type="checkbox" value="1С Бухгалтерия"> 1С Бухгалтерия</label>
+                        <label class="checkbox-item"><input type="checkbox" value="AutoCAD"> AutoCAD</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Python"> Python</label>
+                        <label class="checkbox-item"><input type="checkbox" value="JavaScript"> JavaScript</label>
+                        <label class="checkbox-item"><input type="checkbox" value="SQL"> SQL</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Работа с клиентами"> Работа с клиентами</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Управление персоналом"> Управление персоналом</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Продажи"> Продажи</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Ведение переговоров"> Ведение переговоров</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Бухгалтерский учёт"> Бухгалтерский учёт</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Водительские права"> Водительские права</label>
+                    </div>
+                </div>
+                <hr class="section-divider">
+
+                <!-- Образование -->
+                <div class="filter-section">
+                    <div class="filter-title">Образование</div>
+                    <div class="scroll-area" style="max-height:unset; overflow:visible;">
+                        <label class="checkbox-item"><input type="checkbox" value="Среднее"> Среднее</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Среднее специальное"> Среднее специальное</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Бакалавр"> Бакалавр</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Магистр"> Магистр</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Доктор PhD"> Доктор PhD</label>
+                    </div>
+                </div>
+                <hr class="section-divider">
+
+                <!-- Тип занятости -->
+                <div class="filter-section">
+                    <div class="filter-title">Тип занятости</div>
+                    <div class="scroll-area" style="max-height:unset; overflow:visible;">
+                        <label class="checkbox-item"><input type="checkbox" value="Полная занятость"> Полная занятость</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Частичная занятость"> Частичная занятость</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Проектная работа"> Проектная работа</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Стажировка"> Стажировка</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Удалённо"> Удалённо</label>
+                    </div>
+                </div>
+                <hr class="section-divider">
+
+                <!-- Желаемая зарплата -->
+                <div class="filter-section">
+                    <div class="filter-title">Желаемая зарплата (₸)</div>
+                    <div class="salary-range">
+                        <div class="salary-inputs">
+                            <input type="number" id="salaryFrom" placeholder="От" min="0" step="10000">
+                            <span>—</span>
+                            <input type="number" id="salaryTo" placeholder="До" min="0" step="10000">
+                        </div>
+                    </div>
+                </div>
+                <hr class="section-divider">
+
+                <!-- График работы -->
+                <div class="filter-section">
+                    <div class="filter-title">График работы</div>
+                    <div class="scroll-area" style="max-height:unset; overflow:visible;">
+                        <label class="checkbox-item"><input type="checkbox" value="5/2"> 5/2 (пн–пт)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="6/1"> 6/1</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Вахтовый метод"> Вахтовый метод</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Гибкий график"> Гибкий график</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Сменный график"> Сменный график</label>
+                    </div>
+                </div>
+
+                <button class="apply-btn" id="applyBtn">Применить фильтры</button>
             </div>
         </div>
 
-         <div class="filter-container">
-    <div class="filter-header">Все неразобранные</div>
-    <div class="filter-button">
-        Подходящие отклики
-    </div>
-</div>
-            
+        <!-- Тэги активных фильтров -->
+        <div id="tag-container"></div>
+
+        <!-- Добавить вакансию -->
+        <div class="action-btn white">
+            <img src="plus.png" alt="" width="18">
+            <span>Добавить вакансию</span>
+        </div>
+
+        <!-- Статусы -->
+        <div class="filter-container">
+            <div class="filter-header">Все неразобранные</div>
+            <div class="filter-button">Подходящие отклики</div>
+        </div>
+
+        <div class="filter-container">
             <div class="status-list">
                 <div class="status-item">Подумать</div>
                 <div class="status-item">Телефонное интервью</div>
@@ -167,9 +358,92 @@
                 <div class="status-item">Выход на работу</div>
                 <div class="status-item">Отказ</div>
             </div>
-
-            <button class="auto-btn">Авторазбор</button>
         </div>
+
+        <button class="auto-btn">Авторазбор</button>
+
     </aside>
 </main>
 
+<script>
+    // Табы
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // Расширенный поиск
+    const advBtn       = document.getElementById('advBtn');
+    const dropdown     = document.getElementById('advDropdown');
+    const tagContainer = document.getElementById('tag-container');
+    const applyBtn     = document.getElementById('applyBtn');
+
+    advBtn.addEventListener('click', (e) => {
+        advBtn.classList.toggle('open');
+        dropdown.classList.toggle('show');
+        e.stopPropagation();
+    });
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !advBtn.contains(e.target)) {
+            dropdown.classList.remove('show');
+            advBtn.classList.remove('open');
+        }
+    });
+
+    function renderTags() {
+        const checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+        tagContainer.innerHTML = '';
+
+        // Тэги чекбоксов
+        checked.forEach(inp => {
+            addTag(inp.value, () => { inp.checked = false; renderTags(); applyFilters(); });
+        });
+
+        // Тэг зарплаты
+        const from = document.getElementById('salaryFrom').value;
+        const to   = document.getElementById('salaryTo').value;
+        if (from || to) {
+            const label = (from && to) ? `${(+from).toLocaleString()}₸ — ${(+to).toLocaleString()}₸`
+                        : from ? `от ${(+from).toLocaleString()}₸`
+                        : `до ${(+to).toLocaleString()}₸`;
+            addTag(label, () => {
+                document.getElementById('salaryFrom').value = '';
+                document.getElementById('salaryTo').value = '';
+                renderTags(); applyFilters();
+            });
+        }
+    }
+
+    function addTag(text, onRemove) {
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        const x = document.createElement('span');
+        x.className = 'tag-x';
+        x.textContent = '×';
+        x.addEventListener('click', onRemove);
+        tag.append(document.createTextNode(text + ' '), x);
+        tagContainer.appendChild(tag);
+    }
+
+    function applyFilters() {
+        const selected = Array.from(dropdown.querySelectorAll('input:checked')).map(i => i.value);
+        const from = document.getElementById('salaryFrom').value;
+        const to   = document.getElementById('salaryTo').value;
+        console.log('Фильтры:', { selected, salary: { from, to } });
+    }
+
+    applyBtn.addEventListener('click', () => {
+        renderTags(); applyFilters();
+        dropdown.classList.remove('show');
+        advBtn.classList.remove('open');
+    });
+
+    dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', renderTags);
+    });
+</script>
+
+</body>
+</html>

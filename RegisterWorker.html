@@ -8,17 +8,249 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
 
     <style>
-
-        /* Переопределяем главный контейнер, чтобы он не прилипал к левому краю */
+        body {
+            margin: 0; padding: 0;
+            background-color: #ffffff;
+            display: flex; justify-content: center; min-height: 100vh;
+        }
         .div {
-            width: 1280px !important; /* Жестко фиксируем ширину вашего макета из Figma */
+            width: 1280px !important;
             margin: 0 auto;
             position: relative;
             background-color: #fff;
             overflow: hidden;
         }
+        .lang-bg-active { background-color: #fff !important; box-shadow: 0px 2px 4px rgba(0,0,0,0.15) !important; }
+        .lang-bg-inactive { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+        .lang-text-active { color: #000 !important; font-weight: 700 !important; }
+        .lang-text-inactive { color: #767676 !important; font-weight: 500 !important; }
+        .kz, .ru { transition: color 0.2s ease; }
+        .group-child2, .group-div > div:first-child,
+        .rectangle-container > div:first-child { transition: background-color 0.2s ease; }
+
+        /* Сообщения об ошибках */
+        .field-error {
+            position: absolute;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #e53535;
+            display: none;
+            z-index: 20;
+        }
+
+        /* Оператор-бейдж под полем телефона */
+        #operator-badge {
+            position: absolute;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            z-index: 20;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
     </style>
 
+    <script>
+        const translations = {
+            RU: {
+                findJob: 'Ищу работу',
+                findWorker: 'Ищу сотрудника',
+                title: 'Регистрация для поиска работы',
+                next: 'Дальше',
+                loginWith: 'Войти с помощью',
+                passwordPlaceholder: 'Введите пароль',
+                errPhoneShort:    'Введите номер до конца',
+                errPhoneOperator: 'Неизвестный оператор. Используйте Activ, Beeline, Tele2, Kcell и др.',
+                errPassShort:     'Пароль должен быть не менее 8 символов'
+            },
+            KZ: {
+                findJob: 'Жұмыс іздеймін',
+                findWorker: 'Қызметкер іздеймін',
+                title: 'Жұмыс іздеу үшін тіркеу',
+                next: 'Келесі',
+                loginWith: 'Арқылы кіру',
+                passwordPlaceholder: 'Құпия сөзді енгізіңіз',
+                errPhoneShort:    'Нөмірді соңына дейін енгізіңіз',
+                errPhoneOperator: 'Белгісіз оператор. Activ, Beeline, Tele2, Kcell және т.б. қолданыңыз',
+                errPassShort:     'Құпия сөз кемінде 8 таңба болуы керек'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'RU';
+
+        /* ── Казахстанские операторы по префиксам ──────────────────────────
+           Activ (Kcell):  700, 701, 702, 775, 776, 777
+           Beeline:        705, 706, 707, 708, 747
+           Tele2:          721, 775 (совместный с Activ), 778
+           Altel (4G):     700, 771, 772, 773, 774
+           NEO (был Tele2): 760, 761, 762, 763
+           Neo/Altel доп.: 750, 751                                          */
+        const OPERATORS = {
+            '700': 'Kcell / Altel',
+            '701': 'Activ',
+            '702': 'Activ',
+            '705': 'Beeline',
+            '706': 'Beeline',
+            '707': 'Beeline',
+            '708': 'Beeline',
+            '747': 'Beeline',
+            '721': 'Tele2',
+            '750': 'Altel',
+            '751': 'Altel',
+            '760': 'NEO (Tele2)',
+            '761': 'NEO (Tele2)',
+            '762': 'NEO (Tele2)',
+            '763': 'NEO (Tele2)',
+            '771': 'Altel',
+            '772': 'Altel',
+            '773': 'Altel',
+            '774': 'Altel',
+            '775': 'Activ / Tele2',
+            '776': 'Activ',
+            '777': 'Activ',
+            '778': 'Tele2'
+        };
+
+        // Цвета операторов
+        const OPERATOR_COLORS = {
+            'Activ':           { bg: '#e8f5e9', color: '#2e7d32' },
+            'Kcell / Altel':   { bg: '#e8f5e9', color: '#2e7d32' },
+            'Beeline':         { bg: '#fff8e1', color: '#f57f17' },
+            'Tele2':           { bg: '#e3f2fd', color: '#1565c0' },
+            'NEO (Tele2)':     { bg: '#e3f2fd', color: '#1565c0' },
+            'Altel':           { bg: '#f3e5f5', color: '#6a1b9a' },
+            'Activ / Tele2':   { bg: '#e8f5e9', color: '#2e7d32' }
+        };
+
+        function getOperator(digits) {
+            if (digits.length < 3) return null;
+            return OPERATORS[digits.slice(0, 3)] || null;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            updateLanguage();
+            updateLanguageButtons();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.querySelector('.div2').textContent = t.findWorker;
+            document.querySelector('.div3').textContent = t.findJob;
+            document.querySelector('.div4').textContent = t.title;
+            document.querySelector('.div6').textContent = t.next;
+            document.querySelector('.div7').textContent = t.loginWith;
+            document.getElementById('password-input').placeholder = t.passwordPlaceholder;
+        }
+
+        function updateLanguageButtons() {
+            const kzText = document.querySelector('.kz');
+            const ruText = document.querySelector('.ru');
+            const ruBg = document.querySelector('.group-div .group-child2');
+            const kzBg = document.querySelector('.rectangle-container .rectangle-div');
+
+            if (currentLang === 'KZ') {
+                kzText.classList.add('lang-text-active');   kzText.classList.remove('lang-text-inactive');
+                kzBg.classList.add('lang-bg-active');       kzBg.classList.remove('lang-bg-inactive');
+                ruText.classList.add('lang-text-inactive'); ruText.classList.remove('lang-text-active');
+                ruBg.classList.add('lang-bg-inactive');     ruBg.classList.remove('lang-bg-active');
+            } else {
+                ruText.classList.add('lang-text-active');   ruText.classList.remove('lang-text-inactive');
+                ruBg.classList.add('lang-bg-active');       ruBg.classList.remove('lang-bg-inactive');
+                kzText.classList.add('lang-text-inactive'); kzText.classList.remove('lang-text-active');
+                kzBg.classList.add('lang-bg-inactive');     kzBg.classList.remove('lang-bg-active');
+            }
+        }
+
+        function formatPhone(input) {
+            let digits = input.value.replace(/\D/g, "").slice(0, 10);
+            let formatted = "";
+            if (digits.length > 0) formatted += digits.slice(0, 3);
+            if (digits.length > 3) formatted += " " + digits.slice(3, 6);
+            if (digits.length > 6) formatted += "-" + digits.slice(6, 8);
+            if (digits.length > 8) formatted += "-" + digits.slice(8, 10);
+            input.value = formatted;
+
+            // Показать оператор начиная с 3 цифр
+            const badge = document.getElementById('operator-badge');
+            const op = getOperator(digits);
+            if (op && digits.length >= 3) {
+                const colors = OPERATOR_COLORS[op] || { bg: '#f0f0f0', color: '#333' };
+                badge.textContent = '📶 ' + op;
+                badge.style.background = colors.bg;
+                badge.style.color = colors.color;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            // Убираем ошибку телефона при вводе
+            showFieldError('phone-error', null);
+        }
+
+        function showFieldError(id, msg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (msg) {
+                el.textContent = msg;
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        // Позиционируем поле пароля и бейдж оператора под полем телефона
+        window.addEventListener('DOMContentLoaded', () => {
+            updateLanguage();
+            updateLanguageButtons();
+
+            const phoneBlock = document.querySelector('.rectangle-parent2');
+            const passBlock  = document.querySelector('.rectangle-parent-pass');
+            const badge      = document.getElementById('operator-badge');
+            const phoneErr   = document.getElementById('phone-error');
+            const passErr    = document.getElementById('pass-error');
+            const container  = document.querySelector('.div');
+
+            if (phoneBlock && container) {
+                const ph  = phoneBlock.getBoundingClientRect();
+                const con = container.getBoundingClientRect();
+                const relTop  = ph.top  - con.top;
+                const relLeft = ph.left - con.left;
+
+                // Бейдж оператора — справа под полем телефона
+                badge.style.top  = (relTop + ph.height + 6) + 'px';
+                badge.style.left = (relLeft + ph.width - 140) + 'px';
+
+                // Ошибка телефона
+                phoneErr.style.top  = (relTop + ph.height + 6) + 'px';
+                phoneErr.style.left = relLeft + 'px';
+
+                // Поле пароля — под телефоном
+                if (passBlock) {
+                    passBlock.style.position = 'absolute';
+                    passBlock.style.top  = (relTop + ph.height + 14) + 'px';
+                    passBlock.style.left = relLeft + 'px';
+                    passBlock.style.width = ph.width + 'px';
+
+                    // Ошибка пароля
+                    passErr.style.top  = (relTop + ph.height + 14 + 59 + 4) + 'px';
+                    passErr.style.left = relLeft + 'px';
+                }
+            }
+
+            // Ограничение пароля: максимум 32 символа
+            const passInput = document.getElementById('password-input');
+            passInput.addEventListener('input', () => {
+                if (passInput.value.length > 32) {
+                    passInput.value = passInput.value.slice(0, 32);
+                }
+                showFieldError('pass-error', null);
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -27,52 +259,127 @@
         <div class="group-child"></div>
         <img class="mango-textlogo-png-1-icon" src="logo.png" alt="Logo">
     </div>
-    
-    <div class="child"></div>
-    
-    <div class="group-parent">
-        <div class="rectangle-wrapper">
-            <div class="group-item"></div>
-        </div>
-        <div class="div2">Ищу сотрудника</div>
+
+    <!-- Поле пароля — позиционируется через JS под полем телефона -->
+    <div class="rectangle-parent-pass">
+        <input
+            id="password-input"
+            type="password"
+            placeholder="Введите пароль"
+            maxlength="32"
+            style="position:absolute;top:0;left:0;width:100%;height:59px;border-radius:10px;
+                   background:#fff;border:1px solid #bebebe;outline:none;
+                   font-family:'Public Sans';font-size:20px;padding:0 15px;
+                   box-sizing:border-box;"
+        />
     </div>
-    
+
+    <!-- Ошибки — позиционируются через JS -->
+    <div id="phone-error" class="field-error"></div>
+    <div id="pass-error"  class="field-error"></div>
+    <!-- Бейдж оператора -->
+    <div id="operator-badge"></div>
+
+    <div class="child"></div>
+
+    <div class="group-parent">
+        <div class="rectangle-wrapper"><div class="group-item"></div></div>
+        <div class="div2" onclick="window.location.href='RegisterBoss.html'" style="cursor:pointer;">Ищу сотрудника</div>
+    </div>
+
     <div class="rectangle-group">
         <div class="group-inner"></div>
-        <div class="div3">Ищу работу</div>
+        <div class="div3" style="cursor:default;">Ищу работу</div>
     </div>
-    
+
     <div class="group-container">
         <div class="rectangle-container">
             <div class="rectangle-div"></div>
-            <div class="kz">KZ</div>
+            <div class="kz" onclick="setLanguage('KZ')" style="cursor:pointer;">KZ</div>
         </div>
         <div class="group-div">
             <div class="group-child2"></div>
-            <div class="ru">RU</div>
+            <div class="ru" onclick="setLanguage('RU')" style="cursor:pointer;">RU</div>
         </div>
     </div>
-    
+
     <div class="div4">Регистрация для поиска работы</div>
-    
+
+    <!-- Поле телефона — оригинальное, не тронуто -->
     <div class="rectangle-parent2">
         <div class="group-child3"></div>
         <div class="group-child4"></div>
         <div class="div5">+7</div>
         <img class="kazakhstan-icon" src="kazakhstan.png" alt="kazakhstan">
+        <input
+            id="phone-input"
+            type="tel"
+            maxlength="13"
+            placeholder="000 000-00-00"
+            oninput="formatPhone(this)"
+            style="position:absolute;top:0;left:101px;width:240px;height:59px;border:none;
+                   background:transparent;outline:none;font-family:'Public Sans';
+                   font-size:20px;font-weight:500;color:#000;padding:0 12px;box-sizing:border-box;"
+        />
     </div>
-    
+
+    <!-- Кнопка Дальше — оригинальная -->
     <div class="rectangle-parent3">
         <div class="group-child5"></div>
         <div class="div6">Дальше</div>
     </div>
-    
+
+    <!-- Войти с помощью — оригинальное -->
     <div class="rectangle-parent4">
         <div class="group-child6"></div>
         <div class="div7">Войти с помощью</div>
         <img class="google-icon" src="google.png" alt="google">
     </div>
 </div>
+
+<script>
+    document.querySelector('.rectangle-parent3').style.cursor = 'pointer';
+    document.querySelector('.rectangle-parent3').addEventListener('click', function() {
+        const t = translations[currentLang];
+        const inp     = document.getElementById('phone-input');
+        const passInp = document.getElementById('password-input');
+        const digits  = inp.value.replace(/\D/g, '');
+        let hasError  = false;
+
+        // 1. Проверка длины номера
+        if (digits.length < 10) {
+            inp.style.outline = '2px solid #e53535';
+            showFieldError('phone-error', t.errPhoneShort);
+            setTimeout(() => { inp.style.outline = 'none'; }, 2500);
+            hasError = true;
+        } else {
+            // 2. Проверка оператора
+            const op = getOperator(digits);
+            if (!op) {
+                inp.style.outline = '2px solid #e53535';
+                showFieldError('phone-error', t.errPhoneOperator);
+                setTimeout(() => { inp.style.outline = 'none'; }, 2500);
+                hasError = true;
+            } else {
+                showFieldError('phone-error', null);
+            }
+        }
+
+        // 3. Проверка пароля — минимум 8 символов
+        if (passInp.value.length < 8) {
+            passInp.style.outline = '2px solid #e53535';
+            showFieldError('pass-error', t.errPassShort);
+            setTimeout(() => { passInp.style.outline = 'none'; }, 2500);
+            hasError = true;
+        } else {
+            showFieldError('pass-error', null);
+        }
+
+        if (hasError) return;
+
+        window.location.href = 'MainWorker.html';
+    });
+</script>
 
 </body>
 </html>
