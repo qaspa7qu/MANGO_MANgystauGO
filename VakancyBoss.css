@@ -1,0 +1,215 @@
+/* Базовые настройки для всего экрана */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Public Sans', sans-serif;
+    background-color: #fff;
+}
+
+.div {
+    width: 100%;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    color: #767676;
+}
+
+/* --- ШАПКА (Header) --- */
+.rectangle-parent {
+    width: 100%;
+    height: 84px;
+    background-color: #ff6a00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Лого слева, профиль справа */
+    padding: 0 40px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Фон шапки (уже не нужен как отдельный блок, но оставляем для структуры) */
+.group-child {
+    display: none; 
+}
+
+.mango-textlogo-white-1-icon {
+    width: 155px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Секция с языками и аватаром справа */
+/* Контейнер для логотипа и правой части */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Контейнер, который держит КНОПКУ и АВАТАРКУ рядом */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Расстояние между переключателем и аватаркой как на фото */
+}
+
+/* Сам переключатель языков */
+.group-parent {
+    width: 160px; /* Ширина плашки */
+    height: 48px;
+    position: relative;
+}
+
+.group-item {
+    width: 100%;
+    height: 100%;
+    background-color: #E6E6E6; /* Светло-серый фон как на макете */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Белый "бегунок" под текстом */
+.active-lang-bg {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 74px; /* Половина ширины плашки */
+    height: 40px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2); /* Тень белой кнопки как на фото */
+    z-index: 1;
+}
+
+.lang-text {
+    flex: 1;
+    text-align: center;
+    z-index: 2; /* Текст выше белого фона */
+    font-weight: 500;
+    color: #767676;
+    font-size: 16px;
+}
+
+.lang-text.active {
+    color: #000000; /* Активный язык черным */
+}
+
+/* Аватарка (серый круг) */
+.ellipse-div {
+    width: 60px;
+    height: 60px;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    flex-shrink: 0; /* Чтобы круг не сжимался */
+}
+
+/* --- КОНТЕНТ (Form Section) --- */
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 35px;
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #9E9E9E;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        .input, .textarea, .select {
+            width: 100%;
+            border: 1px solid #bebebe;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input:focus, .textarea:focus {
+            border-color: #ff6a00;
+        }
+
+        .textarea {
+            height: 150px;
+            resize: none;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* --- КНОПКИ --- */
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background-color: #ff6a00;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #e65f00;
+        }
+
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #767676;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Плэйсхолдеры */
+        ::placeholder {
+            color: #bebebe;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
