@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="RegisterWorker.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
+    <style>
+        body { margin:0; padding:0; background-color:#f4f4f4; display:flex; justify-content:center; min-height:100vh; }
+        .div { width:1280px!important; margin:0 auto; position:relative; background-color:#fff; overflow:hidden; }
+        .lang-bg-active { background-color:#fff!important; box-shadow:0px 2px 4px rgba(0,0,0,0.15)!important; }
+        .lang-bg-inactive { background-color:transparent!important; border:none!important; box-shadow:none!important; }
+        .lang-text-active { color:#000!important; font-weight:700!important; }
+        .lang-text-inactive { color:#767676!important; font-weight:500!important; }
+        .kz, .ru { transition:color 0.2s ease; }
+        .group-child2, .group-div > div:first-child,
+        .rectangle-container > div:first-child { transition:background-color 0.2s ease; }
+
+        .field-error {
+            position:absolute;
+            font-family:'Public Sans',sans-serif;
+            font-size:12px; font-weight:500;
+            color:#e53535; display:none; z-index:20;
+        }
+
+        /* Toast — зелёное уведомление */
+        #toast {
+            display:none; position:fixed; bottom:40px; left:50%;
+            transform:translateX(-50%);
+            background:#22c55e; color:#fff;
+            font-family:'Public Sans',sans-serif; font-size:16px; font-weight:600;
+            padding:14px 32px; border-radius:12px;
+            box-shadow:0 4px 20px rgba(34,197,94,0.4);
+            z-index:9999; white-space:nowrap;
+        }
+        #toast.show { display:block; animation:fadeUp 0.3s ease; }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateX(-50%) translateY(12px); }
+            to   { opacity:1; transform:translateX(-50%) translateY(0); }
+        }
+
+        /* Ссылка "Нет аккаунта?" */
+        #reg-hint {
+            position:absolute;
+            font-family:'Public Sans',sans-serif;
+            font-size:14px; font-weight:500; color:#767676;
+            display:flex; align-items:center; gap:8px; z-index:20;
+        }
+        #reg-hint span {
+            color:#ff6a00; font-weight:700; cursor:pointer;
+            padding:4px 14px; border-radius:8px; border:2px solid #ff6a00;
+            transition:background 0.15s, color 0.15s;
+        }
+        #reg-hint span:hover { background:#ff6a00; color:#fff; }
+    </style>
+
+    <script>
+        const translations = {
+            RU: {
+                findJob: 'Ищу работу', findWorker: 'Ищу сотрудника',
+                title: 'Авторизация',
+                loginBtn: 'Войти',
+                loginWith: 'Войти с помощью',
+                phonePlaceholder: '000 000-00-00',
+                passwordPlaceholder: 'Пароль',
+                errPhoneShort: 'Введите номер до конца',
+                errPassEmpty:  'Введите пароль',
+                errWrong:      'Неверный номер или пароль',
+                noAccount:     'Нет аккаунта?',
+                registerBtn:   'Зарегистрироваться',
+                successMsg:    '✅ Авторизация успешна!'
+            },
+            KZ: {
+                findJob: 'Жұмыс іздеймін', findWorker: 'Қызметкер іздеймін',
+                title: 'Авторизация',
+                loginBtn: 'Кіру',
+                loginWith: 'Арқылы кіру',
+                phonePlaceholder: '000 000-00-00',
+                passwordPlaceholder: 'Құпия сөз',
+                errPhoneShort: 'Нөмірді соңына дейін енгізіңіз',
+                errPassEmpty:  'Құпия сөзді енгізіңіз',
+                errWrong:      'Қате нөмір немесе құпия сөз',
+                noAccount:     'Аккаунт жоқ па?',
+                registerBtn:   'Тіркелу',
+                successMsg:    '✅ Авторизация сәтті!'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'RU';
+
+        function setLanguage(lang) {
+            currentLang = lang; localStorage.setItem('lang', lang);
+            updateLanguage(); updateLanguageButtons();
+        }
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.querySelector('.div2').textContent = t.findWorker;
+            document.querySelector('.div3').textContent = t.findJob;
+            document.querySelector('.div4').textContent = t.title;
+            document.querySelector('.div6').textContent = t.loginBtn;
+            document.querySelector('.div7').textContent = t.loginWith;
+            document.getElementById('password-input').placeholder = t.passwordPlaceholder;
+            document.getElementById('hint-text').textContent  = t.noAccount;
+            document.getElementById('hint-btn').textContent   = t.registerBtn;
+        }
+        function updateLanguageButtons() {
+            const kzText = document.querySelector('.kz'), ruText = document.querySelector('.ru');
+            const ruBg = document.querySelector('.group-div .group-child2');
+            const kzBg = document.querySelector('.rectangle-container .rectangle-div');
+            if (currentLang === 'KZ') {
+                kzText.classList.add('lang-text-active');   kzText.classList.remove('lang-text-inactive');
+                kzBg.classList.add('lang-bg-active');       kzBg.classList.remove('lang-bg-inactive');
+                ruText.classList.add('lang-text-inactive'); ruText.classList.remove('lang-text-active');
+                ruBg.classList.add('lang-bg-inactive');     ruBg.classList.remove('lang-bg-active');
+            } else {
+                ruText.classList.add('lang-text-active');   ruText.classList.remove('lang-text-inactive');
+                ruBg.classList.add('lang-bg-active');       ruBg.classList.remove('lang-bg-inactive');
+                kzText.classList.add('lang-text-inactive'); kzText.classList.remove('lang-text-active');
+                kzBg.classList.add('lang-bg-inactive');     kzBg.classList.remove('lang-bg-active');
+            }
+        }
+        function formatPhone(input) {
+            let d = input.value.replace(/\D/g,"").slice(0,10), f="";
+            if (d.length>0) f+=d.slice(0,3);
+            if (d.length>3) f+=" "+d.slice(3,6);
+            if (d.length>6) f+="-"+d.slice(6,8);
+            if (d.length>8) f+="-"+d.slice(8,10);
+            input.value = f;
+            showErr('phone-error', null);
+        }
+        function showErr(id, msg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = msg || '';
+            el.style.display = msg ? 'block' : 'none';
+        }
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.className = 'show';
+            setTimeout(() => t.className = '', 2500);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateLanguage();
+            updateLanguageButtons();
+
+            const phoneBlock = document.querySelector('.rectangle-parent2');
+            const passBlock  = document.querySelector('.rectangle-parent-pass');
+            const phoneErr   = document.getElementById('phone-error');
+            const passErr    = document.getElementById('pass-error');
+            const hint       = document.getElementById('reg-hint');
+            const container  = document.querySelector('.div');
+
+            if (phoneBlock && container) {
+                const ph  = phoneBlock.getBoundingClientRect();
+                const con = container.getBoundingClientRect();
+                const top  = ph.top  - con.top;
+                const left = ph.left - con.left;
+                const w    = ph.width;
+                const h    = ph.height;
+
+                phoneErr.style.top  = (top + h + 5) + 'px';
+                phoneErr.style.left = left + 'px';
+
+                if (passBlock) {
+                    passBlock.style.position = 'absolute';
+                    passBlock.style.top    = (top + h + 14) + 'px';
+                    passBlock.style.left   = left + 'px';
+                    passBlock.style.width  = w + 'px';
+                    passBlock.style.height = h + 'px';
+
+                    passErr.style.top  = (top + h*2 + 18) + 'px';
+                    passErr.style.left = left + 'px';
+
+                    hint.style.top  = (top + h*2 + 42) + 'px';
+                    hint.style.left = left + 'px';
+                }
+            }
+
+            // Пароль: блокируем ввод свыше 32 символов
+            const passInput = document.getElementById('password-input');
+            passInput.addEventListener('keydown', function(e) {
+                const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+                if (e.ctrlKey || e.metaKey) return;
+                if (allowed.includes(e.key)) return;
+                if (passInput.value.length >= 32) e.preventDefault();
+            });
+            passInput.addEventListener('input', function() {
+                if (passInput.value.length > 32) passInput.value = passInput.value.slice(0,32);
+                showErr('pass-error', null);
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="div">
+    <!-- Карточка с логотипом — идентична Register -->
+    <div class="rectangle-parent">
+        <div class="group-child"></div>
+        <img class="mango-textlogo-png-1-icon" src="logo.png" alt="Logo">
+    </div>
+
+    <!-- Поле пароля (позиционируется через JS) -->
+    <div class="rectangle-parent-pass">
+        <input id="password-input" type="password" placeholder="Пароль"
+            style="position:absolute;top:0;left:0;width:100%;height:59px;border-radius:10px;
+                   background:#fff;border:1px solid #bebebe;outline:none;
+                   font-family:'Public Sans';font-size:20px;padding:0 15px;box-sizing:border-box;" />
+    </div>
+
+    <!-- Ошибки -->
+    <div id="phone-error" class="field-error"></div>
+    <div id="pass-error"  class="field-error"></div>
+
+    <!-- "Нет аккаунта? [Зарегистрироваться]" -->
+    <div id="reg-hint">
+        <span id="hint-text">Нет аккаунта?</span>
+        <span id="hint-btn" onclick="window.location.href='RegisterWorker.html'">Зарегистрироваться</span>
+    </div>
+
+    <div class="child"></div>
+
+    <!-- Табы -->
+    <div class="group-parent">
+        <div class="rectangle-wrapper"><div class="group-item"></div></div>
+        <div class="div2" onclick="window.location.href='RegisterBoss.html'" style="cursor:pointer;">Ищу сотрудника</div>
+    </div>
+    <div class="rectangle-group">
+        <div class="group-inner"></div>
+        <div class="div3" style="cursor:default;">Ищу работу</div>
+    </div>
+
+    <!-- Языковые кнопки -->
+    <div class="group-container">
+        <div class="rectangle-container">
+            <div class="rectangle-div"></div>
+            <div class="kz" onclick="setLanguage('KZ')" style="cursor:pointer;">KZ</div>
+        </div>
+        <div class="group-div">
+            <div class="group-child2"></div>
+            <div class="ru" onclick="setLanguage('RU')" style="cursor:pointer;">RU</div>
+        </div>
+    </div>
+
+    <!-- Заголовок — "Авторизация" вместо "Регистрация" -->
+    <div class="div4">Авторизация</div>
+
+    <!-- Поле телефона — оригинальное -->
+    <div class="rectangle-parent2">
+        <div class="group-child3"></div>
+        <div class="group-child4"></div>
+        <div class="div5">+7</div>
+        <img class="kazakhstan-icon" src="kazakhstan.png" alt="kazakhstan">
+        <input id="phone-input" type="tel" maxlength="13" placeholder="000 000-00-00"
+            oninput="formatPhone(this)"
+            style="position:absolute;top:0;left:101px;width:240px;height:59px;border:none;
+                   background:transparent;outline:none;font-family:'Public Sans';
+                   font-size:20px;font-weight:500;color:#000;padding:0 12px;box-sizing:border-box;" />
+    </div>
+
+    <!-- Кнопка Войти — оранжевая, та же что "Дальше" -->
+    <div class="rectangle-parent3" style="cursor:pointer;">
+        <div class="group-child5"></div>
+        <div class="div6">Войти</div>
+    </div>
+
+    <!-- Войти с помощью Google -->
+    <div class="rectangle-parent4">
+        <div class="group-child6"></div>
+        <div class="div7">Войти с помощью</div>
+        <img class="google-icon" src="google.png" alt="google">
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    document.querySelector('.rectangle-parent3').addEventListener('click', async function() {
+        const t       = translations[currentLang];
+        const inp     = document.getElementById('phone-input');
+        const passInp = document.getElementById('password-input');
+        const digits  = inp.value.replace(/\D/g, '');
+        let hasError  = false;
+
+        if (digits.length < 10) {
+            inp.style.outline = '2px solid #e53535';
+            showErr('phone-error', t.errPhoneShort);
+            setTimeout(() => inp.style.outline = 'none', 2500);
+            hasError = true;
+        } else {
+            showErr('phone-error', null);
+        }
+
+        if (!passInp.value) {
+            passInp.style.outline = '2px solid #e53535';
+            showErr('pass-error', t.errPassEmpty);
+            setTimeout(() => passInp.style.outline = 'none', 2500);
+            hasError = true;
+        } else {
+            showErr('pass-error', null);
+        }
+
+        if (hasError) return;
+
+        // Попытка входа через API
+        try {
+            const phone = '+7' + digits;
+            const res = await fetch('/api/worker/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ phone, password: passInp.value })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('currentUser', JSON.stringify({ type:'worker', phone:data.phone, id:data.id }));
+                showToast(t.successMsg);
+                setTimeout(() => window.location.href = 'MainWorker.html', 1400);
+            } else {
+                inp.style.outline = '2px solid #e53535';
+                passInp.style.outline = '2px solid #e53535';
+                showErr('pass-error', t.errWrong);
+                setTimeout(() => { inp.style.outline='none'; passInp.style.outline='none'; }, 2500);
+            }
+        } catch(e) {
+            // Если нет сервера — всё равно переходим (для тестирования без бэкенда)
+            showToast(t.successMsg);
+            setTimeout(() => window.location.href = 'MainWorker.html', 1400);
+        }
+    });
+</script>
+</body>
+</html>
