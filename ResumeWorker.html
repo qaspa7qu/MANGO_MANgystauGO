@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="ResumeWorker.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
+    
+    <style>
+        /* Базовые сбросы для адаптивности */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        /* Оранжевая шапка на всю ширину */
+        .rectangle-parent {
+            background-color: #ff6a00;
+            width: 100%;
+            height: 84px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Центрируем внутренний контент */
+        }
+
+        /* Контейнер внутри шапки, который держит элементы по краям */
+        .header-content {
+            width: 95%;
+            max-width: 1400px; /* Чтобы на огромных мониторах лого не улетало слишком далеко */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+         /* Правые боковые кнопки */
+        .side-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-button {
+            height: 45px;
+            border-radius: 10px;
+            border: 1px solid #bebebe;
+            background: #e6e6e6;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #424242;
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="rectangle-parent">
+    <div class="header-content">
+        <img class="logo-white-1-icon" src="logowhite.png" alt="MANGystau GO">
+        
+        <div class="user-controls">
+            <div class="group-parent">
+                <div class="group-item">
+                    <div class="active-lang-bg"></div>
+                    <div class="lang-text ru active">RU</div>
+                    <div class="lang-text kz">KZ</div>
+                </div>
+            </div>
+            <div class="ellipse-div"></div>
+        </div>
+    </div>
+</header>
+
+
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <h1>Создание нового резюме</h1>
+
+        <form>
+            <!-- Основная информация -->
+            <div class="resume-section">
+                <div class="section-title">Основная информация</div>
+                <div class="form-group">
+                    <label>Желаемая должность</label>
+                    <input type="text" placeholder="Например: Продавец-консультант">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Имя и Фамилия</label>
+                        <input type="text" placeholder="Иван Иванов">
+                    </div>
+                    <div class="form-group">
+                        <label>Город проживания</label>
+                        <select>
+                            <option>Актау</option>
+                            <option>Жанаозен</option>
+                            <option>Форт-Шевченко</option>
+                            <option>Бейнеу</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="tel" placeholder="+7 (___) ___-__-__">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" placeholder="example@mail.kz">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Опыт работы -->
+            <div class="resume-section">
+                <div class="section-title">Опыт работы</div>
+                <div class="form-group">
+                    <label>Название компании</label>
+                    <input type="text" placeholder="Где вы работали?">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Должность</label>
+                        <input type="text" placeholder="Кем вы работали?">
+                    </div>
+                    <div class="form-group">
+                        <label>Период работы</label>
+                        <input type="text" placeholder="Январь 2022 — Настоящее время">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Обязанности</label>
+                    <textarea placeholder="Кратко опишите, что вы делали на этой позиции"></textarea>
+                </div>
+                <button type="button" class="btn-add-more">+ Добавить место работы</button>
+            </div>
+
+            <!-- Образование -->
+            <div class="resume-section">
+                <div class="section-title">Образование</div>
+                <div class="form-group">
+                    <label>Учебное заведение</label>
+                    <input type="text" placeholder="Университет, колледж или школа">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Специальность</label>
+                        <input type="text" placeholder="Например: Менеджмент">
+                    </div>
+                    <div class="form-group">
+                        <label>Год окончания</label>
+                        <input type="text" placeholder="2023">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Навыки и о себе -->
+            <div class="resume-section">
+                <div class="section-title">О себе и навыки</div>
+                <div class="form-group">
+                    <label>Ключевые навыки</label>
+                    <input type="text" placeholder="Например: Знание Excel, водительские права категории B">
+                </div>
+                <div class="form-group">
+                    <label>Дополнительная информация</label>
+                    <textarea placeholder="Опишите свои сильные стороны или дополнительные достижения"></textarea>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="actions">
+                <button type="button" class="btn-cancel">Отмена</button>
+                <button type="submit" class="btn-submit">Опубликовать резюме</button>
+            </div>
+        </form>
+    </main>
+
+</body>
+</html>

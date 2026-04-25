@@ -1,0 +1,249 @@
+/* Базовые настройки для всего экрана */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Public Sans', sans-serif;
+    background-color: #fff;
+}
+
+.div {
+    width: 100%;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    color: #767676;
+}
+
+/* --- ШАПКА (Header) --- */
+.rectangle-parent {
+    width: 100%;
+    height: 84px;
+    background-color: #ff6a00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Лого слева, профиль справа */
+    padding: 0 40px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Фон шапки (уже не нужен как отдельный блок, но оставляем для структуры) */
+.group-child {
+    display: none; 
+}
+
+.mango-textlogo-white-1-icon {
+    width: 155px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Секция с языками и аватаром справа */
+/* Контейнер для логотипа и правой части */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Контейнер, который держит КНОПКУ и АВАТАРКУ рядом */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Расстояние между переключателем и аватаркой как на фото */
+}
+
+/* Сам переключатель языков */
+.group-parent {
+    width: 160px; /* Ширина плашки */
+    height: 48px;
+    position: relative;
+}
+
+.group-item {
+    width: 100%;
+    height: 100%;
+    background-color: #E6E6E6; /* Светло-серый фон как на макете */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Белый "бегунок" под текстом */
+.active-lang-bg {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 74px; /* Половина ширины плашки */
+    height: 40px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2); /* Тень белой кнопки как на фото */
+    z-index: 1;
+}
+
+.lang-text {
+    flex: 1;
+    text-align: center;
+    z-index: 2; /* Текст выше белого фона */
+    font-weight: 500;
+    color: #767676;
+    font-size: 16px;
+}
+
+.lang-text.active {
+    color: #000000; /* Активный язык черным */
+}
+
+/* Аватарка (серый круг) */
+.ellipse-div {
+    width: 60px;
+    height: 60px;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    flex-shrink: 0; /* Чтобы круг не сжимался */
+}
+
+/* --- ОСНОВНОЙ КОНТЕНТ --- */
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .resume-section {
+            background-color: #f5f5f5; /* Тот же серый фон, что и в фильтрах */
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #9e9e9e;
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- ПОЛЯ ВВОДА --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #424242;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #bebebe;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #ff6a00;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* --- КНОПКИ --- */
+        .btn-add-more {
+            background: none;
+            border: 1px dashed #bebebe;
+            color: #767676;
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-add-more:hover {
+            border-color: #ff6a00;
+            color: #ff6a00;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 40px;
+            margin-bottom: 80px;
+        }
+
+        .btn-cancel {
+            background: #e6e6e6;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #424242;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: #ff6a00;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 106, 0, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: #e65f00;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
