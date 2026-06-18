@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="chatbot.css">
+    
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; overflow-x: hidden;
+            font-family: 'Public Sans', sans-serif;
+            background: #f7f7f7;
+        }
+
+        /* ── Шапка ── */
+        .rectangle-parent {
+            background-color: #ff6a00;
+            width: 100%; height: 84px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .header-content {
+            width: 95%; max-width: 1400px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* ── Сетка ── */
+        .search-area {
+            width: 95%; max-width: 1400px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+
+        /* ── Поиск ── */
+        .search-bar-container { position: relative; display: flex; align-items: center; }
+        .group-child2 {
+            width: 100%; height: 52px;
+            border-radius: 10px; border: 1px solid #bebebe;
+            padding-left: 20px; box-sizing: border-box;
+            font-family: 'Public Sans', sans-serif; font-size: 16px; outline: none;
+        }
+        .group-child2:focus { border-color: #ff6a00; }
+        .tabs-container { display: flex; gap: 10px; margin-top: 15px; }
+        .tab-button {
+            border: 1px solid #bebebe; border-radius: 10px;
+            padding: 8px 40px; background: white;
+            font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; transition: all 0.2s;
+        }
+        .tab-button:hover, .tab-button.active {
+            background: #ff6a00; color: #fff; border-color: #ff6a00;
+        }
+
+        /* ── Правая колонка ── */
+        .sidebar-column { display: flex; flex-direction: column; gap: 10px; }
+        .action-btn {
+            height: 48px; border-radius: 10px;
+            border: 1px solid #bebebe; background: #e6e6e6;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 15px; font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; color: #424242;
+            transition: background 0.2s; text-decoration: none;
+        }
+        .action-btn:hover { background: #d5d5d5; }
+        .action-btn.white { background: white; }
+        .action-btn.white:hover { background: #f5f5f5; }
+
+        /* ── Статусы ── */
+        .filter-container { border: 1px solid #bebebe; border-radius: 10px; overflow: hidden; }
+        .filter-header { background: #f5f5f5; padding: 10px 15px; font-weight: 600; font-size: 14px; border-bottom: 1px solid #bebebe; }
+        .filter-button { padding: 10px 15px; font-size: 14px; cursor: pointer; color: #ff6a00; font-weight: 500; }
+        .filter-button:hover { background: #fff5ee; }
+        .status-list { display: flex; flex-direction: column; }
+        .status-item { padding: 9px 15px; font-size: 14px; border-top: 1px solid #f0f0f0; cursor: pointer; color: #424242; transition: background 0.15s; }
+        .status-item:hover { background: #fff5ee; color: #ff6a00; }
+        .auto-btn {
+            width: 100%; padding: 12px; border-radius: 10px;
+            background: #ff6a00; color: #fff; border: none;
+            font-family: 'Public Sans', sans-serif; font-size: 15px;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+        }
+        .auto-btn:hover { background: #e05e00; }
+
+        /* ── Расширенный поиск ── */
+        .adv-wrapper { position: relative; }
+        .advanced-search-btn {
+            width: 100%; height: 48px;
+            background: #e6e6e6; border: 1px solid #bebebe; border-radius: 10px;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 15px; font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; color: #424242;
+            transition: all 0.2s; box-sizing: border-box;
+            position: relative; z-index: 101;
+        }
+        .advanced-search-btn.open {
+            border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+            background: #fff; border-bottom-color: transparent;
+        }
+        .dropdown-panel {
+            display: none;
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: #fff; border: 1px solid #bebebe;
+            border-top: none;
+            border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+            z-index: 100; padding: 14px; box-sizing: border-box;
+        }
+        .dropdown-panel.show { display: block; }
+        .filter-section { margin-bottom: 14px; }
+        .filter-title { font-size: 11px; font-weight: 700; color: #9e9e9e; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+        .scroll-area { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; padding-right: 4px; }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #ff6a00; border-radius: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: #424242; padding: 3px 0; }
+        .checkbox-item input { accent-color: #ff6a00; width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+        .salary-inputs { display: flex; gap: 8px; align-items: center; }
+        .salary-inputs input[type="number"] { width: 100%; height: 34px; border-radius: 8px; border: 1px solid #bebebe; padding: 0 8px; font-family: 'Public Sans', sans-serif; font-size: 13px; box-sizing: border-box; outline: none; }
+        .salary-inputs input[type="number"]:focus { border-color: #ff6a00; }
+        .salary-inputs span { color: #9e9e9e; font-size: 13px; flex-shrink: 0; }
+        .apply-btn { width: 100%; background: #ff6a00; color: #fff; border: none; padding: 10px; border-radius: 8px; margin-top: 6px; font-weight: 600; cursor: pointer; font-family: 'Public Sans', sans-serif; font-size: 14px; transition: background 0.2s; }
+        .apply-btn:hover { background: #e05e00; }
+        #tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+        .tag { background: #ff6a00; color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+        .tag-x { cursor: pointer; font-weight: 700; opacity: 0.8; }
+        .tag-x:hover { opacity: 1; }
+        .section-divider { border: none; border-top: 1px solid #f0f0f0; margin: 4px 0 10px; }
+
+        /* ══════════════════════════════════════════════
+           КАРТОЧКИ РЕЗЮМЕ
+        ══════════════════════════════════════════════ */
+        .resumes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .resume-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 18px;
+            padding: 20px 24px 20px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            transition: box-shadow 0.2s, transform 0.2s;
+            animation: fadeInUp 0.35s ease both;
+        }
+        .resume-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Аватар */
+        .card-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: #d9d9d9;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: 700; color: #fff;
+            background: linear-gradient(135deg, #ff6a00 0%, #ffaa44 100%);
+            user-select: none;
+        }
+
+        /* Контент карточки */
+        .card-body { flex: 1; min-width: 0; }
+        .card-name {
+            font-size: 17px; font-weight: 700; color: #1a1a1a;
+            margin: 0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .card-position {
+            font-size: 14px; color: #ff6a00; font-weight: 600; margin-bottom: 10px;
+        }
+
+        .card-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .card-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px; color: #555;
+        }
+        .card-field svg { flex-shrink: 0; color: #bbb; }
+        .card-field span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .card-skills-row {
+            display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
+        }
+        .skill-pill {
+            background: #f0f0f0; color: #555;
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: 500;
+        }
+
+        /* Кнопки действий карточки */
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        .btn-invite {
+            padding: 9px 22px; border-radius: 10px;
+            background: #ff6a00; color: #fff; border: none;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-invite:hover { background: #e05e00; }
+        .btn-decline {
+            padding: 9px 22px; border-radius: 10px;
+            background: #fff; color: #ff6a00;
+            border: 1.5px solid #ff6a00;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-decline:hover { background: #fff5ee; }
+        .btn-chat {
+            padding: 9px 22px; border-radius: 10px;
+            background: #fff; color: #424242;
+            border: 1px solid #bebebe;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-chat:hover { background: #f5f5f5; }
+
+        /* ── Пустое состояние ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+        }
+        .empty-state svg { margin-bottom: 16px; opacity: 0.4; }
+        .empty-state p { font-size: 15px; margin: 0; }
+
+        /* ── Счётчик ── */
+        .results-count {
+            font-size: 13px; color: #888; margin-top: 14px; margin-bottom: 0;
+        }
+        .results-count span { font-weight: 700; color: #ff6a00; }
+    </style>
+</head>
+<body>
+
+<header class="rectangle-parent">
+    <div class="header-content">
+        <img class="logo-white-1-icon" src="logowhite.png" alt="MANGystau GO" style="height:40px;">
+        <div class="user-controls">
+            <div class="group-parent">
+                <div class="group-item">
+                    <div class="active-lang-bg"></div>
+                    <div class="lang-text ru active">RU</div>
+                    <div class="lang-text kz">KZ</div>
+                </div>
+            </div>
+            <div class="ellipse-div"></div>
+        </div>
+    </div>
+</header>
+
+<main class="search-area">
+
+    <!-- ── Левая колонка ── -->
+    <div class="left-column">
+        <div class="search-bar-container">
+            <input type="text" class="group-child2" id="searchInput" placeholder="Поиск резюме">
+        </div>
+        <div class="tabs-container">
+            <div class="tab-button active">Лучшие</div>
+            <div class="tab-button">Пол</div>
+            <div class="tab-button">Возраст</div>
+        </div>
+
+        <p class="results-count" id="resultsCount"></p>
+
+        <!-- ── Список карточек резюме ── -->
+        <div class="resumes-list" id="resumesList"></div>
+    </div>
+
+    <!-- ── Правая колонка ── -->
+    <aside class="sidebar-column">
+
+        <!-- РАСШИРЕННЫЙ ПОИСК -->
+        <div class="adv-wrapper">
+            <div class="advanced-search-btn" id="advBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>
+                </svg>
+                <span>Расширенный поиск</span>
+            </div>
+
+            <div class="dropdown-panel" id="advDropdown">
+                <div class="filter-section">
+                    <div class="filter-title">Опыт работы</div>
+                    <div class="scroll-area" style="max-height:unset; overflow:visible;">
+                        <label class="checkbox-item"><input type="checkbox" value="Без опыта"> Без опыта</label>
+                        <label class="checkbox-item"><input type="checkbox" value="До 1 года"> До 1 года</label>
+                        <label class="checkbox-item"><input type="checkbox" value="1–3 года"> 1–3 года</label>
+                        <label class="checkbox-item"><input type="checkbox" value="3–6 лет"> 3–6 лет</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Более 6 лет"> Более 6 лет</label>
+                    </div>
+                </div>
+                <hr class="section-divider">
+                <div class="filter-section">
+                    <div class="filter-title">Ключевые навыки</div>
+                    <div class="scroll-area">
+                        <label class="checkbox-item"><input type="checkbox" value="Microsoft Office"> Microsoft Office</label>
+                        <label class="checkbox-item"><input type="checkbox" value="1С Бухгалтерия"> 1С Бухгалтерия</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Python"> Python</label>
+                        <label class="checkbox-item"><input type="checkbox" value="JavaScript"> JavaScript</label>
+                        <label class="checkbox-item"><input type="checkbox" value="SQL"> SQL</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Продажи"> Продажи</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Водительские права"> Водительские права</label>
+                    </div>
+                </div>
+                <hr class="section-divider">
+                <div class="filter-section">
+                    <div class="filter-title">Желаемая зарплата (₸)</div>
+                    <div class="salary-inputs">
+                        <input type="number" id="salaryFrom" placeholder="От" min="0" step="10000">
+                        <span>—</span>
+                        <input type="number" id="salaryTo" placeholder="До" min="0" step="10000">
+                    </div>
+                </div>
+                <button class="apply-btn" id="applyBtn">Применить фильтры</button>
+            </div>
+        </div>
+
+        <div id="tag-container"></div>
+
+        <!-- Добавить вакансию -->
+        <div class="action-btn white" style="cursor:pointer;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <span>Добавить вакансию</span>
+        </div>
+
+        <!-- Статусы -->
+        <div class="filter-container">
+            <div class="filter-header">Все неразобранные</div>
+            <div class="filter-button">Подходящие отклики</div>
+        </div>
+        <div class="filter-container">
+            <div class="status-list">
+                <div class="status-item">Подумать</div>
+                <div class="status-item">Телефонное интервью</div>
+                <div class="status-item">Оценка</div>
+                <div class="status-item">Интервью</div>
+                <div class="status-item">Предложение о работе</div>
+                <div class="status-item">Выход на работу</div>
+                <div class="status-item">Отказ</div>
+            </div>
+        </div>
+        <button class="auto-btn">Авторазбор</button>
+    </aside>
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  ЗАГРУЗКА И ОТОБРАЖЕНИЕ РЕЗЮМЕ
+// ══════════════════════════════════════════════════════
+
+let allResumes = [];
+
+function loadResumes() {
+    const saved = localStorage.getItem('mangystau_resumes');
+    allResumes = saved ? JSON.parse(saved) : [];
+    // Добавляем демо-данные если нет реальных
+    if (allResumes.length === 0) {
+        allResumes = getDemoResumes();
+    }
+    renderResumes(allResumes);
+}
+
+function getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(/\s+/);
+    return parts.map(p => p[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function renderResumes(list) {
+    const container = document.getElementById('resumesList');
+    const countEl = document.getElementById('resultsCount');
+    container.innerHTML = '';
+
+    countEl.innerHTML = `Найдено резюме: <span>${list.length}</span>`;
+
+    if (list.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                <p>Резюме пока нет.<br>Они появятся здесь после публикации.</p>
+            </div>`;
+        return;
+    }
+
+    list.forEach((resume, i) => {
+        const card = document.createElement('div');
+        card.className = 'resume-card';
+        card.style.animationDelay = (i * 0.06) + 's';
+
+        const skills = resume.skills
+            ? resume.skills.split(',').map(s => s.trim()).filter(Boolean).slice(0, 4)
+            : [];
+
+        const hasExp = resume.experience && resume.experience.some(e => e.company);
+        const expText = hasExp
+            ? resume.experience.find(e => e.company)?.company || ''
+            : 'Без опыта';
+
+        card.innerHTML = `
+            <div class="card-avatar">${getInitials(resume.fullname)}</div>
+            <div class="card-body">
+                <div class="card-name">${resume.fullname || '—'}</div>
+                <div class="card-position">${resume.position || '—'}</div>
+                <div class="card-fields">
+                    <div class="card-field">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <span>${resume.city || '—'}</span>
+                    </div>
+                    <div class="card-field">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        <span>${expText}</span>
+                    </div>
+                    <div class="card-field">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        <span>${resume.email || '—'}</span>
+                    </div>
+                    <div class="card-field">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        <span>${resume.phone || '—'}</span>
+                    </div>
+                </div>
+                ${skills.length ? `
+                <div class="card-skills-row">
+                    ${skills.map(s => `<span class="skill-pill">${s}</span>`).join('')}
+                </div>` : ''}
+            </div>
+            <div class="card-actions">
+                <button class="btn-invite" onclick="handleAction(this, 'invite')">Пригласить</button>
+                <button class="btn-decline" onclick="handleAction(this, 'decline')">Отказать</button>
+                <button class="btn-chat" onclick="handleAction(this, 'chat')">Написать в чат</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function handleAction(btn, type) {
+    const card = btn.closest('.resume-card');
+    if (type === 'invite') {
+        card.style.borderColor = '#43a047';
+        card.style.boxShadow = '0 2px 12px rgba(67,160,71,0.15)';
+        btn.textContent = '✓ Приглашён';
+        btn.disabled = true;
+        btn.style.background = '#43a047';
+    } else if (type === 'decline') {
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+    } else if (type === 'chat') {
+        alert('Функция чата будет доступна после подключения бэкенда.');
+    }
+}
+
+// ── Поиск ──
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { renderResumes(allResumes); return; }
+    const filtered = allResumes.filter(r =>
+        (r.fullname || '').toLowerCase().includes(q) ||
+        (r.position || '').toLowerCase().includes(q) ||
+        (r.skills || '').toLowerCase().includes(q) ||
+        (r.city || '').toLowerCase().includes(q)
+    );
+    renderResumes(filtered);
+});
+
+// ── Демо-данные ──
+function getDemoResumes() {
+    return [
+        {
+            fullname: 'Aibek Dzhaksybekov',
+            position: 'Менеджер по продажам',
+            city: 'Актау',
+            phone: '+7 (701) 234-56-78',
+            email: 'aibek@gmail.com',
+            skills: 'Продажи, Работа с клиентами, Excel',
+            experience: [{ company: 'КазМунайГаз', role: 'Менеджер', period: '2020–2024', duties: '' }],
+            about: ''
+        },
+        {
+            fullname: 'Dinara Seitkali',
+            position: 'Бухгалтер',
+            city: 'Актау',
+            phone: '+7 (702) 345-67-89',
+            email: 'dinara@mail.ru',
+            skills: '1С Бухгалтерия, Excel, Налоговый учёт',
+            experience: [],
+            about: ''
+        },
+        {
+            fullname: 'Ruslan Akhmetov',
+            position: 'Программист',
+            city: 'Жанаозен',
+            phone: '+7 (707) 456-78-90',
+            email: 'ruslan@yandex.ru',
+            skills: 'Python, JavaScript, SQL, Git',
+            experience: [{ company: 'IT Start', role: 'Разработчик', period: '2022–2024', duties: '' }],
+            about: ''
+        }
+    ];
+}
+
+// ══════════════════════════════════════════════════════
+//  БОКОВАЯ ПАНЕЛЬ
+// ══════════════════════════════════════════════════════
+document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+const advBtn = document.getElementById('advBtn');
+const dropdown = document.getElementById('advDropdown');
+const tagContainer = document.getElementById('tag-container');
+const applyBtn = document.getElementById('applyBtn');
+
+advBtn.addEventListener('click', (e) => {
+    advBtn.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    e.stopPropagation();
+});
+document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && !advBtn.contains(e.target)) {
+        dropdown.classList.remove('show');
+        advBtn.classList.remove('open');
+    }
+});
+
+function renderTags() {
+    const checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+    tagContainer.innerHTML = '';
+    checked.forEach(inp => {
+        addTag(inp.value, () => { inp.checked = false; renderTags(); });
+    });
+    const from = document.getElementById('salaryFrom').value;
+    const to = document.getElementById('salaryTo').value;
+    if (from || to) {
+        const label = (from && to) ? `${(+from).toLocaleString()}₸ — ${(+to).toLocaleString()}₸`
+                    : from ? `от ${(+from).toLocaleString()}₸`
+                    : `до ${(+to).toLocaleString()}₸`;
+        addTag(label, () => {
+            document.getElementById('salaryFrom').value = '';
+            document.getElementById('salaryTo').value = '';
+            renderTags();
+        });
+    }
+}
+
+function addTag(text, onRemove) {
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    const x = document.createElement('span');
+    x.className = 'tag-x'; x.textContent = '×';
+    x.addEventListener('click', onRemove);
+    tag.append(document.createTextNode(text + ' '), x);
+    tagContainer.appendChild(tag);
+}
+
+applyBtn.addEventListener('click', () => {
+    renderTags();
+    dropdown.classList.remove('show');
+    advBtn.classList.remove('open');
+});
+dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', renderTags);
+});
+
+// ── Инициализация ──
+loadResumes();
+</script>
+<script src="chatbot.js"></script>
+</body>
+</html>

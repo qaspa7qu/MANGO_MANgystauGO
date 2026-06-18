@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="VakancyBoss.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
+    <title>Новая вакансия</title>
+    <style>
+        /* Базовые сбросы для адаптивности */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        /* Оранжевая шапка на всю ширину */
+        .rectangle-parent {
+            background-color: #ff6a00;
+            width: 100%;
+            height: 84px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Центрируем внутренний контент */
+        }
+
+        /* Контейнер внутри шапки, который держит элементы по краям */
+        .header-content {
+            width: 95%;
+            max-width: 1400px; /* Чтобы на огромных мониторах лого не улетало слишком далеко */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+         /* Правые боковые кнопки */
+        .side-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-button {
+            height: 45px;
+            border-radius: 10px;
+            border: 1px solid #bebebe;
+            background: #e6e6e6;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #424242;
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="rectangle-parent">
+    <div class="header-content">
+        <img class="logo-white-1-icon" src="logowhite.png" alt="MANGystau GO">
+        
+        <div class="user-controls">
+            <div class="group-parent">
+                <div class="group-item">
+                    <div class="active-lang-bg"></div>
+                    <div class="lang-text ru active">RU</div>
+                    <div class="lang-text kz">KZ</div>
+                </div>
+            </div>
+            <div class="ellipse-div"></div>
+        </div>
+    </div>
+</header>
+
+<body>
+
+
+    <div class="container">
+        <h1>Новая вакансия</h1>
+
+        <form>
+            <div class="form-group">
+                <label class="label">Название должности</label>
+                <input type="text" class="input" placeholder="Например: Повар холодного цеха">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label class="label">Город / Район</label>
+                    <input type="text" class="input" placeholder="Актау, Жанаозен...">
+                </div>
+                <div class="form-group">
+                    <label class="label">Зарплата (₸)</label>
+                    <input type="text" class="input" placeholder="От 150 000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Опыт работы</label>
+                <select class="select">
+                    <option>Без опыта</option>
+                    <option>От 1 года до 3 лет</option>
+                    <option>От 3 до 6 лет</option>
+                    <option>Более 6 лет</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Обязанности и требования</label>
+                <textarea class="textarea" placeholder="Опишите кратко, что нужно делать и какого сотрудника вы ищете..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Контактные данные</label>
+                <input type="text" class="input" placeholder="Номер телефона или email">
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Опубликовать вакансию</button>
+                <button type="button" class="btn-secondary">Отмена</button>
+            </div>
+        </form>
+    </div>
+<script src="chatbot.js"></script>
+</body>
+
+
+</html>

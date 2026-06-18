@@ -1,0 +1,321 @@
+/* Базовые настройки для всего экрана */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Public Sans', sans-serif;
+    background-color: #fff;
+}
+
+.div {
+    width: 100%;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    color: #767676;
+}
+
+/* --- ШАПКА (Header) --- */
+.rectangle-parent {
+    width: 100%;
+    height: 84px;
+    background-color: #ff6a00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Лого слева, профиль справа */
+    padding: 0 40px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Фон шапки (уже не нужен как отдельный блок, но оставляем для структуры) */
+.group-child {
+    display: none; 
+}
+
+.mango-textlogo-white-1-icon {
+    width: 155px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Секция с языками и аватаром справа */
+/* Контейнер для логотипа и правой части */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Контейнер, который держит КНОПКУ и АВАТАРКУ рядом */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Расстояние между переключателем и аватаркой как на фото */
+}
+
+/* Сам переключатель языков */
+.group-parent {
+    width: 160px; /* Ширина плашки */
+    height: 48px;
+    position: relative;
+}
+
+.group-item {
+    width: 100%;
+    height: 100%;
+    background-color: #E6E6E6; /* Светло-серый фон как на макете */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Белый "бегунок" под текстом */
+.active-lang-bg {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 74px; /* Половина ширины плашки */
+    height: 40px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2); /* Тень белой кнопки как на фото */
+    z-index: 1;
+}
+
+.lang-text {
+    flex: 1;
+    text-align: center;
+    z-index: 2; /* Текст выше белого фона */
+    font-weight: 500;
+    color: #767676;
+    font-size: 16px;
+}
+
+.lang-text.active {
+    color: #000000; /* Активный язык черным */
+}
+
+/* Аватарка (серый круг) */
+.ellipse-div {
+    width: 60px;
+    height: 60px;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    flex-shrink: 0; /* Чтобы круг не сжимался */
+}
+
+/* --- КОНТЕЙНЕР ПОИСКА --- */
+.rectangle-container {
+    width: 100%;
+    max-width: 1400px; /* Ограничиваем, чтобы на сверхшироких экранах не расползалось */
+    margin: 20px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 320px; /* Левая часть - поиск, правая - кнопки */
+    gap: 20px;
+    text-align: left;
+}
+
+/* Поле поиска */
+.search-wrapper {
+    position: relative;
+    grid-column: 1;
+}
+
+.group-child2 {
+    width: 100%;
+    height: 52px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #bebebe;
+    padding: 0 80px 0 20px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Оранжевая кнопка лупы */
+.group-child6 {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    width: 69px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #ff6a00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.search-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Кнопки справа (Расширенный поиск и Добавить резюме) */
+.side-actions {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-btn {
+    width: 100%;
+    height: 45px;
+    border-radius: 10px;
+    border: 1px solid #bebebe;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 10px;
+    font-weight: 500;
+    color: #424242;
+    background-color: #fff;
+}
+
+.action-btn.gray { background-color: #e6e6e6; }
+
+.tab-item {
+    flex: 1;
+    height: 33px;
+    border-radius: 10px;
+    border: 1px solid #bebebe;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+}
+
+/* Основная сетка страницы */
+.search-area {
+    width: 95%;
+    max-width: 1400px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: 1fr 320px; /* Соотношение сторон как на фото 2 */
+    gap: 30px;
+    align-items: start;
+}
+
+/* Контейнер боковой панели */
+.sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Отступ между кнопками и серым блоком */
+}
+
+.action-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Кнопки "Расширенный поиск" и "Добавить" */
+.action-btn {
+    height: 48px;
+    border: 1px solid #bebebe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 12px;
+    background: #fff;
+    font-weight: 500;
+    color: #424242;
+    cursor: pointer;
+}
+
+.action-btn.gray {
+    background-color: #E6E6E6;
+}
+
+/* Панель статусов */
+
+
+
+.status-list {
+    background: #fff;
+    border: 1px solid #bebebe;
+    border-radius: 12px;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: left;
+}
+
+.status-item {
+    color: #a1a1a1;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Нижняя оранжевая кнопка */
+.auto-btn {
+    height: 50px;
+    background-color: #ff6a00;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.filter-container {
+    width: 280px; /* настройте ширину под ваш макет */
+    background-color: #E6E6E6; /* Светло-серый фон плашки */
+    border-radius: 12px;
+    padding: 16px 12px 12px 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filter-header {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    color: #9E9E9E; /* Тусклый цвет заголовка */
+    padding-left: 4px;
+}
+
+.filter-button {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333333;
+    cursor: pointer;
+    /* Тень, которая создает эффект "вдавленности" или четких границ как на фото */
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);
+    transition: background-color 0.2s;
+}
+
+.filter-button:hover {
+    background-color: #f9f9f9;
+}

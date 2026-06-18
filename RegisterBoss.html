@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    
+    <link rel="stylesheet" href="RegisterBoss.css" />
+   <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
+    <title>Регистрация для поиска сотрудников</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .div {
+            width: 1280px !important;
+            margin: 0 auto;
+            position: relative;
+            background-color: #fff;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .lang-bg-active { background-color: #fff !important; box-shadow: 0px 2px 4px rgba(0,0,0,0.15) !important; }
+        .lang-bg-inactive { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+        .lang-text-active { color: #000 !important; font-weight: 700 !important; }
+        .lang-text-inactive { color: #767676 !important; font-weight: 500 !important; }
+        .kz, .ru { transition: color 0.2s ease; }
+
+        /* Сообщения об ошибках под полями */
+        .field-error {
+            position: absolute;
+            left: 470px;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 13px;
+            color: #e53535;
+            display: none;
+        }
+        #email-error { top: 416px; }  /* под email полем */
+        #pass-error  { top: 491px; }  /* под pass полем */
+
+        /* Подсветка поля при ошибке */
+        input.input-error {
+            border-color: #e53535 !important;
+            outline: none !important;
+        }
+    </style>
+
+    <script>
+    const translations = {
+        RU: {
+            findJob: 'Ищу работу',
+            findWorker: 'Ищу сотрудника',
+            title: 'Регистрация для поиска сотрудников',
+            email: 'Электронная почта',
+            password: 'Пароль',
+            next: 'Дальше',
+            errEmailEmpty:   'Введите электронную почту',
+            errEmailInvalid: 'Введите настоящую почту: name@gmail.com',
+            errPassShort:    'Пароль должен быть не менее 8 символов'
+        },
+        KZ: {
+            findJob: 'Жұмыс іздеймін',
+            findWorker: 'Қызметкер іздеймін',
+            title: 'Қызметкер іздеу үшін тіркеу',
+            email: 'Электрондық пошта',
+            password: 'Құпия сөз',
+            next: 'Келесі',
+            errEmailEmpty:   'Электрондық поштаны енгізіңіз',
+            errEmailInvalid: 'Нақты пошта енгізіңіз: name@gmail.com',
+            errPassShort:    'Құпия сөз кемінде 8 таңба болуы керек'
+        }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'RU';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('lang', lang);
+        updateLanguage();
+        updateLanguageButtons();
+    }
+
+    function updateLanguage() {
+        const t = translations[currentLang];
+        document.querySelector('.div2').textContent = t.findWorker;
+        document.querySelector('.div3').textContent = t.findJob;
+        document.querySelector('.div4').textContent = t.title;
+        document.querySelector('.div7').textContent = t.next;
+        document.getElementById('boss-email').placeholder    = t.email;
+        document.getElementById('boss-password').placeholder = t.password;
+    }
+
+    function updateLanguageButtons() {
+        const kzText = document.querySelector('.kz');
+        const ruText = document.querySelector('.ru');
+        const ruBg   = document.querySelector('.rectangle-group .group-child2');
+        const kzBg   = document.querySelector('.group-div .rectangle-div');
+
+        if (currentLang === 'KZ') {
+            kzText.classList.add('lang-text-active');   kzText.classList.remove('lang-text-inactive');
+            kzBg.classList.add('lang-bg-active');       kzBg.classList.remove('lang-bg-inactive');
+            ruText.classList.add('lang-text-inactive'); ruText.classList.remove('lang-text-active');
+            ruBg.classList.add('lang-bg-inactive');     ruBg.classList.remove('lang-bg-active');
+        } else {
+            ruText.classList.add('lang-text-active');   ruText.classList.remove('lang-text-inactive');
+            ruBg.classList.add('lang-bg-active');       ruBg.classList.remove('lang-bg-inactive');
+            kzText.classList.add('lang-text-inactive'); kzText.classList.remove('lang-text-active');
+            kzBg.classList.add('lang-bg-inactive');     kzBg.classList.remove('lang-bg-active');
+        }
+    }
+
+    function isValidEmail(email) {
+        const structure = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,6}$/;
+        if (!structure.test(email)) return false;
+        const local = email.split('@')[0];
+        if (/^[.\-]|[.\-]$/.test(local)) return false;
+        if (/[.\-]{2,}/.test(local)) return false;
+        const domain = email.split('@')[1];
+        if (!domain.includes('.')) return false;
+        return true;
+    }
+
+    function showFieldError(inputEl, errorEl, msg) {
+        inputEl.classList.add('input-error');
+        errorEl.textContent = msg;
+        errorEl.style.display = 'block';
+    }
+
+    function clearFieldError(inputEl, errorEl) {
+        inputEl.classList.remove('input-error');
+        errorEl.style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateLanguage();
+        updateLanguageButtons();
+
+        const emailInput = document.getElementById('boss-email');
+        const passInput  = document.getElementById('boss-password');
+        const emailError = document.getElementById('email-error');
+        const passError  = document.getElementById('pass-error');
+
+        emailInput.addEventListener('input', () => clearFieldError(emailInput, emailError));
+        passInput.addEventListener('input',  () => clearFieldError(passInput,  passError));
+
+        const nextBtn = document.querySelector('.rectangle-parent3');
+        nextBtn.style.cursor = 'pointer';
+
+        nextBtn.onclick = function() {
+            const t = translations[currentLang];
+            const email = emailInput.value.trim();
+            const pass  = passInput.value;
+            let hasError = false;
+
+            if (!email) {
+                showFieldError(emailInput, emailError, t.errEmailEmpty);
+                hasError = true;
+            } else if (!isValidEmail(email)) {
+                showFieldError(emailInput, emailError, t.errEmailInvalid);
+                hasError = true;
+            } else {
+                clearFieldError(emailInput, emailError);
+            }
+
+            if (pass.length < 8) {
+                showFieldError(passInput, passError, t.errPassShort);
+                hasError = true;
+            } else {
+                clearFieldError(passInput, passError);
+            }
+
+            if (hasError) return;
+
+            // ОТПРАВКА ДАННЫХ НА БЭКЕНД МАЛИНКИ
+            fetch('http://172.25.201.9:3000/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // Важно для CORS
+                body: JSON.stringify({
+                    username: email,
+                    password: pass,
+                    role: 'boss' // Указываем роль работодателя
+                })
+            })
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Ошибка при регистрации');
+                }
+                // Сохраняем состояние сессии локально и редиректим
+                localStorage.setItem('currentUser', JSON.stringify({ type: 'boss', email: email }));
+                window.location.href = 'MainBoss.html';
+            })
+            .catch(err => {
+                console.error("Ошибка:", err);
+                showFieldError(emailInput, emailError, err.message || "Сервер недоступен");
+            });
+        };
+    });
+    </script>
+</head>
+<body>
+    <div class="div">
+        <div class="rectangle-parent">
+            <div class="group-child"></div>
+            <img class="mango-textlogo-png-1-icon" src="logo.png" alt="Logo">
+        </div>
+
+        <div class="child"></div>
+
+        <div class="group-parent">
+            <div class="rectangle-wrapper">
+                <div class="group-item"></div>
+            </div>
+            <div class="group-inner"></div>
+            <div class="div2" style="cursor: default;">Ищу сотрудника</div>
+            <div class="wrapper">
+                <div class="div3" onclick="window.location.href='RegisterWorker.html'" style="cursor: pointer;">Ищу работу</div>
+            </div>
+        </div>
+
+        <div class="group-container">
+            <div class="group-div">
+                <div class="group-div">
+                    <div class="rectangle-div"></div>
+                </div>
+                <div class="kz" onclick="setLanguage('KZ')" style="cursor: pointer;">KZ</div>
+            </div>
+            <div class="rectangle-group">
+                <div class="group-child2"></div>
+                <div class="ru" onclick="setLanguage('RU')" style="cursor: pointer;">RU</div>
+            </div>
+        </div>
+
+        <div class="div4">Регистрация для поиска сотрудников</div>
+
+        <div class="rectangle-parent2" style="top: 359px;">
+            <input type="email" id="boss-email" placeholder="Электронная почта"
+                   style="position:absolute; top:0; left:0; width:340px; height:59px;
+                          border-radius:10px; border:1px solid #bebebe;
+                          padding:0 15px; font-family:'Public Sans'; font-size:18px;
+                          outline:none; box-sizing:border-box; transition: border-color 0.2s;">
+        </div>
+
+        <div class="rectangle-parent2" style="top: 433px;">
+            <input type="password" id="boss-password" placeholder="Пароль"
+                   style="position:absolute; top:0; left:0; width:340px; height:59px;
+                          border-radius:10px; border:1px solid #bebebe;
+                          padding:0 15px; font-family:'Public Sans'; font-size:18px;
+                          outline:none; box-sizing:border-box; transition: border-color 0.2s;">
+        </div>
+
+        <div id="email-error" class="field-error"></div>
+        <div id="pass-error"  class="field-error"></div>
+
+        <div class="rectangle-parent3">
+            <div class="group-child5"></div>
+            <div class="div7">Дальше</div>
+        </div>
+    </div>
+    <script src="chatbot.js"></script>
+</body>
+</html>

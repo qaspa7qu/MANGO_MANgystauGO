@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="MainWorker.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap" />
+    <link rel="stylesheet" href="chatbot.css">
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; overflow-x: hidden;
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        /* ── Шапка ── */
+        .rectangle-parent {
+            background-color: #ff6a00;
+            width: 100%; height: 84px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .header-content {
+            width: 95%; max-width: 1400px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* ── Основная сетка ── */
+        .search-area {
+            width: 95%; max-width: 1400px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+
+        .search-bar-container {
+            position: relative;
+            display: flex; align-items: center;
+        }
+        .group-child2 {
+            width: 100%; height: 52px;
+            border-radius: 10px; border: 1px solid #bebebe;
+            padding-left: 20px; box-sizing: border-box;
+            font-family: 'Public Sans', sans-serif; font-size: 16px;
+            outline: none;
+        }
+        .group-child2:focus { border-color: #ff6a00; }
+
+        .tabs-container {
+            display: flex; gap: 10px; margin-top: 15px;
+        }
+        .tab-button {
+            border: 1px solid #bebebe; border-radius: 10px;
+            padding: 8px 40px; background: white;
+            font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif;
+            transition: all 0.2s;
+        }
+        .tab-button:hover, .tab-button.active {
+            background: #ff6a00; color: #fff; border-color: #ff6a00;
+        }
+
+        /* ── Правая колонка ── */
+        .side-buttons {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .action-button {
+            height: 48px; border-radius: 10px;
+            border: 1px solid #bebebe; background: #e6e6e6;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 15px; font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; color: #424242;
+            transition: background 0.2s;
+        }
+        .action-button:hover { background: #d5d5d5; }
+        .action-button.white { background: white; }
+        .action-button.white:hover { background: #f5f5f5; }
+
+        /* ══════════════════════════════════════════════
+           РАСШИРЕННЫЙ ПОИСК — выпадающая панель
+        ══════════════════════════════════════════════ */
+        .adv-wrapper {
+            position: relative;
+        }
+
+        .advanced-search-btn {
+            width: 100%; height: 48px;
+            background-color: #e6e6e6;
+            border: 1px solid #bebebe; border-radius: 10px;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 15px; font-weight: 500; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; color: #424242;
+            transition: all 0.2s;
+            box-sizing: border-box;
+            position: relative; z-index: 101;
+        }
+        .advanced-search-btn.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            background: #fff;
+            border-bottom-color: transparent;
+        }
+
+        .dropdown-panel {
+            display: none;
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: #fff;
+            border: 1px solid #bebebe;
+            border-top: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+            z-index: 100;
+            padding: 14px;
+            box-sizing: border-box;
+        }
+        .dropdown-panel.show { display: block; }
+
+        .filter-section { margin-bottom: 14px; }
+        .filter-title {
+            font-size: 11px; font-weight: 700;
+            color: #9e9e9e; letter-spacing: 0.06em;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+
+        .scroll-area {
+            max-height: 160px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 6px;
+            padding-right: 4px;
+        }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #ff6a00; border-radius: 10px; }
+
+        .checkbox-item {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; font-size: 14px; color: #424242; padding: 3px 0;
+        }
+        .checkbox-item input {
+            accent-color: #ff6a00; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;
+        }
+
+        .apply-btn {
+            width: 100%; background: #ff6a00; color: #fff;
+            border: none; padding: 10px; border-radius: 8px;
+            margin-top: 6px; font-weight: 600; cursor: pointer;
+            font-family: 'Public Sans', sans-serif; font-size: 14px;
+            transition: background 0.2s;
+        }
+        .apply-btn:hover { background: #e05e00; }
+
+        /* ── Тэги выбранных фильтров ── */
+        #tag-container {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            margin-top: 8px;
+        }
+        .tag {
+            background: #ff6a00; color: #fff;
+            padding: 4px 10px; border-radius: 20px;
+            font-size: 12px; font-weight: 500;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .tag-x {
+            cursor: pointer; font-weight: 700;
+            line-height: 1; opacity: 0.8;
+        }
+        .tag-x:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+
+<header class="rectangle-parent">
+    <div class="header-content">
+        <img class="logo-white-1-icon" src="logowhite.png" alt="MANGystau GO">
+        <div class="user-controls">
+            <div class="group-parent">
+                <div class="group-item">
+                    <div class="active-lang-bg"></div>
+                    <div class="lang-text ru active">RU</div>
+                    <div class="lang-text kz">KZ</div>
+                </div>
+            </div>
+            <div class="ellipse-div"></div>
+        </div>
+    </div>
+</header>
+
+<main class="search-area">
+
+    <!-- ── Левая колонка ── -->
+    <div class="left-column">
+        <div class="search-bar-container">
+            <input type="text" class="group-child2" placeholder="Поиск">
+            <div class="group-child6">
+                <img class="search-icon" src="search.png" alt="search">
+            </div>
+        </div>
+        <div class="tabs-container">
+            <div class="tab-button active">Главная</div>
+            <div class="tab-button">Популярно</div>
+            <div class="tab-button">Для Вас</div>
+        </div>
+    </div>
+
+    <!-- ── Правая колонка ── -->
+    <div class="side-buttons">
+
+        <!-- РАСШИРЕННЫЙ ПОИСК -->
+        <div class="adv-wrapper">
+            <div class="advanced-search-btn" id="advBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>
+                </svg>
+                <span>Расширенный поиск</span>
+            </div>
+
+            <!-- Выпадающая панель -->
+            <div class="dropdown-panel" id="advDropdown">
+
+                <!-- Районы Мангистауской области -->
+                <div class="filter-section">
+                    <div class="filter-title">Районы области</div>
+                    <div class="scroll-area">
+                        <label class="checkbox-item"><input type="checkbox" value="Мунайлинский р-н"> Мунайлинский р-н</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Тупкараганский р-н"> Тупкараганский р-н</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Каракиянский р-н"> Каракиянский р-н</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Мангистауский р-н"> Мангистауский р-н</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Бейнеуский р-н"> Бейнеуский р-н</label>
+                        <label class="checkbox-item"><input type="checkbox" value="г. Жанаозен"> г. Жанаозен</label>
+                        <label class="checkbox-item"><input type="checkbox" value="г. Актау"> г. Актау</label>
+                    </div>
+                </div>
+
+                <!-- Микрорайоны Актау -->
+                <div class="filter-section">
+                    <div class="filter-title">Микрорайоны Актау</div>
+                    <div class="scroll-area">
+                        <label class="checkbox-item"><input type="checkbox" value="1 мкр"> 1 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="2 мкр"> 2 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="3 мкр"> 3 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="4 мкр"> 4 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="5 мкр"> 5 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="6 мкр"> 6 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="7 мкр"> 7 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="8 мкр"> 8 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="9 мкр"> 9 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="10 мкр"> 10 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="11 мкр"> 11 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="12 мкр"> 12 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="13 мкр"> 13 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="14 мкр"> 14 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="15 мкр"> 15 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="17 мкр"> 17 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="20 мкр"> 20 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="21 мкр"> 21 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="23 мкр"> 23 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="24 мкр"> 24 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="25 мкр"> 25 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="26 мкр"> 26 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="27 мкр"> 27 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="28 мкр"> 28 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="29 мкр"> 29 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="30 мкр"> 30 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="31 мкр"> 31 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="32 мкр"> 32 микрорайон</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Верхняя зона"> Верхняя зона (30+)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="Центр"> Центр</label>
+                    </div>
+                </div>
+
+                <button class="apply-btn" id="applyBtn">Применить фильтры</button>
+            </div>
+        </div>
+
+        <!-- Тэги выбранных фильтров — под кнопкой -->
+        <div id="tag-container"></div>
+
+        <!-- Добавить резюме -->
+        <div class="action-button white" onclick="window.location.href='ResumeWorker.html'" style="cursor:pointer;">
+    <img src="plus.png" alt="plus" width="18">
+    <div>Добавить резюме</div>
+</div>
+</main>
+
+<script>
+    // ── Табы ──
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // ── Расширенный поиск ──
+    const advBtn      = document.getElementById('advBtn');
+    const dropdown    = document.getElementById('advDropdown');
+    const tagContainer= document.getElementById('tag-container');
+    const applyBtn    = document.getElementById('applyBtn');
+
+    // Открытие / закрытие
+    advBtn.addEventListener('click', (e) => {
+        advBtn.classList.toggle('open');
+        dropdown.classList.toggle('show');
+        e.stopPropagation();
+    });
+
+    // Закрытие при клике вне
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !advBtn.contains(e.target)) {
+            dropdown.classList.remove('show');
+            advBtn.classList.remove('open');
+        }
+    });
+
+    // Рендер тэгов
+    function renderTags() {
+        const checked = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+        tagContainer.innerHTML = '';
+        checked.forEach(inp => {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `${inp.value} <span class="tag-x" data-val="${inp.value}">×</span>`;
+            tagContainer.appendChild(tag);
+        });
+        // Вешаем удаление на крестики
+        tagContainer.querySelectorAll('.tag-x').forEach(x => {
+            x.addEventListener('click', () => {
+                const cb = dropdown.querySelector(`input[value="${x.dataset.val}"]`);
+                if (cb) { cb.checked = false; renderTags(); applyFilters(); }
+            });
+        });
+    }
+
+    // Применить фильтры
+    function applyFilters() {
+        const selected = Array.from(dropdown.querySelectorAll('input:checked')).map(i => i.value);
+        // Здесь можно фильтровать карточки вакансий по selected
+        console.log('Активные фильтры:', selected);
+    }
+
+    applyBtn.addEventListener('click', () => {
+        renderTags();
+        applyFilters();
+        dropdown.classList.remove('show');
+        advBtn.classList.remove('open');
+    });
+
+    // Живое обновление тэгов при снятии галочки прямо в списке
+    dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', renderTags);
+    });
+
+</script>
+<script src="chatbot.js"></script>
+</body>
+</html>

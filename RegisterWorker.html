@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="RegisterWorker.css" />
+   
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@500;700&display=swap" />
+    <style>
+        body { margin:0; padding:0; background-color:#f4f4f4; display:flex; justify-content:center; min-height:100vh; }
+        .div { width:1280px!important; margin:0 auto; position:relative; background-color:#fff; overflow:hidden; }
+
+        /* Языковые кнопки */
+        .lang-bg-active { background-color:#fff!important; box-shadow:0px 2px 4px rgba(0,0,0,0.15)!important; }
+        .lang-bg-inactive { background-color:transparent!important; border:none!important; box-shadow:none!important; }
+        .lang-text-active { color:#000!important; font-weight:700!important; }
+        .lang-text-inactive { color:#767676!important; font-weight:500!important; }
+        .kz, .ru { transition:color 0.2s ease; }
+        .group-child2, .group-div > div:first-child,
+        .rectangle-container > div:first-child { transition:background-color 0.2s ease; }
+
+        /* ===== КАРТОЧКА РЕГИСТРАЦИИ ===== */
+        .register-card {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+            padding: 36px 32px 32px 32px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .register-card .logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .register-card .logo-wrap img {
+            height: 80px;
+        }
+
+        .register-card .card-title {
+            font-family: 'Public Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Поле телефона */
+        .phone-field {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 54px;
+            border: 1.5px solid #bebebe;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 6px;
+            box-sizing: border-box;
+            background: #fff;
+        }
+        .phone-prefix {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            border-right: 1.5px solid #bebebe;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .phone-prefix img {
+            width: 26px; height: 18px; object-fit: cover; border-radius: 3px;
+        }
+        #phone-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            color: #222;
+            padding: 0 14px;
+            background: transparent;
+            height: 100%;
+        }
+
+        /* Бейдж оператора */
+        #operator-badge {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-bottom: 4px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        /* Ошибки */
+        .field-error {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #e53535;
+            display: none;
+            margin-bottom: 6px;
+            min-height: 16px;
+        }
+
+        /* Поле пароля */
+        #password-input {
+            width: 100%;
+            height: 54px;
+            border: 1.5px solid #bebebe;
+            border-radius: 10px;
+            outline: none;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            color: #222;
+            padding: 0 14px;
+            box-sizing: border-box;
+            background: #fff;
+            margin-bottom: 4px;
+        }
+
+        /* Кнопка Дальше */
+        .btn-next {
+            width: 100%;
+            height: 52px;
+            background: #ff6a00;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 12px;
+            margin-bottom: 14px;
+            transition: background 0.15s;
+        }
+        .btn-next:hover { background: #e55a00; }
+
+        /* Войти с помощью Google */
+        .btn-google {
+            width: 100%;
+            height: 52px;
+            background: #fff;
+            border: 1.5px solid #bebebe;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 18px;
+            transition: background 0.15s;
+        }
+        .btn-google:hover { background: #f5f5f5; }
+        .btn-google img { width: 24px; height: 24px; }
+
+        /* "Есть аккаунт? [Войти]" */
+        #login-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #767676;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #login-hint .hint-label { white-space: nowrap; }
+        #login-hint .hint-btn {
+            color: #ff6a00;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 14px;
+            border-radius: 8px;
+            border: 2px solid #ff6a00;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+        #login-hint .hint-btn:hover { background: #ff6a00; color: #fff; }
+    </style>
+
+    <script>
+        const translations = {
+            RU: {
+                findJob: 'Ищу работу',
+                findWorker: 'Ищу сотрудника',
+                title: 'Регистрация для поиска работы',
+                next: 'Дальше',
+                loginWith: 'Войти с помощью',
+                passwordPlaceholder: 'Введите пароль',
+                errPhoneShort:    'Введите номер до конца',
+                errPhoneOperator: 'Неизвестный оператор. Используйте Activ, Beeline, Tele2, Kcell и др.',
+                errPassShort:     'Пароль должен быть не менее 8 символов',
+                haveAccount:      'Есть аккаунт?',
+                loginBtn:         'Войти'
+            },
+            KZ: {
+                findJob: 'Жұмыс іздеймін',
+                findWorker: 'Қызметкер іздеймін',
+                title: 'Жұмыс іздеу үшін тіркеу',
+                next: 'Келесі',
+                loginWith: 'Арқылы кіру',
+                passwordPlaceholder: 'Құпия сөзді енгізіңіз',
+                errPhoneShort:    'Нөмірді соңына дейін енгізіңіз',
+                errPhoneOperator: 'Белгісіз оператор. Activ, Beeline, Tele2, Kcell қолданыңыз',
+                errPassShort:     'Құпия сөз кемінде 8 таңба болуы керек',
+                haveAccount:      'Аккаунт бар ма?',
+                loginBtn:         'Кіру'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'RU';
+
+        const OPERATORS = {
+            '700':'Kcell / Altel','701':'Activ','702':'Activ',
+            '705':'Beeline','706':'Beeline','707':'Beeline','708':'Beeline','747':'Beeline',
+            '721':'Tele2','750':'Altel','751':'Altel',
+            '760':'NEO (Tele2)','761':'NEO (Tele2)','762':'NEO (Tele2)','763':'NEO (Tele2)',
+            '771':'Altel','772':'Altel','773':'Altel','774':'Altel',
+            '775':'Activ / Tele2','776':'Activ','777':'Activ','778':'Tele2'
+        };
+        const OPERATOR_COLORS = {
+            'Activ':{ bg:'#e8f5e9', color:'#2e7d32' },
+            'Kcell / Altel':{ bg:'#e8f5e9', color:'#2e7d32' },
+            'Beeline':{ bg:'#fff8e1', color:'#f57f17' },
+            'Tele2':{ bg:'#e3f2fd', color:'#1565c0' },
+            'NEO (Tele2)':{ bg:'#e3f2fd', color:'#1565c0' },
+            'Altel':{ bg:'#f3e5f5', color:'#6a1b9a' },
+            'Activ / Tele2':{ bg:'#e8f5e9', color:'#2e7d32' }
+        };
+
+        function getOperator(digits) {
+            return digits.length >= 3 ? (OPERATORS[digits.slice(0,3)] || null) : null;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang; localStorage.setItem('lang', lang);
+            updateLanguage(); updateLanguageButtons();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.querySelector('.div2').textContent = t.findWorker;
+            document.querySelector('.div3').textContent = t.findJob;
+            document.querySelector('.card-title').textContent = t.title;
+            document.querySelector('.btn-next').textContent = t.next;
+            document.querySelector('.google-label').textContent = t.loginWith;
+            document.getElementById('password-input').placeholder = t.passwordPlaceholder;
+            document.querySelector('#login-hint .hint-label').textContent = t.haveAccount;
+            document.querySelector('#login-hint .hint-btn').textContent  = t.loginBtn;
+        }
+
+        function updateLanguageButtons() {
+            const kzText = document.querySelector('.kz'), ruText = document.querySelector('.ru');
+            const ruBg = document.querySelector('.group-div .group-child2');
+            const kzBg = document.querySelector('.rectangle-container .rectangle-div');
+            if (currentLang === 'KZ') {
+                kzText.classList.add('lang-text-active');   kzText.classList.remove('lang-text-inactive');
+                kzBg.classList.add('lang-bg-active');       kzBg.classList.remove('lang-bg-inactive');
+                ruText.classList.add('lang-text-inactive'); ruText.classList.remove('lang-text-active');
+                ruBg.classList.add('lang-bg-inactive');     ruBg.classList.remove('lang-bg-active');
+            } else {
+                ruText.classList.add('lang-text-active');   ruText.classList.remove('lang-text-inactive');
+                ruBg.classList.add('lang-bg-active');       ruBg.classList.remove('lang-bg-inactive');
+                kzText.classList.add('lang-text-inactive'); kzText.classList.remove('lang-text-active');
+                kzBg.classList.add('lang-bg-inactive');     kzBg.classList.remove('lang-bg-active');
+            }
+        }
+
+        function formatPhone(input) {
+            let digits = input.value.replace(/\D/g, "").slice(0, 10);
+            let f = "";
+            if (digits.length > 0) f += digits.slice(0,3);
+            if (digits.length > 3) f += " " + digits.slice(3,6);
+            if (digits.length > 6) f += "-" + digits.slice(6,8);
+            if (digits.length > 8) f += "-" + digits.slice(8,10);
+            input.value = f;
+
+            const badge = document.getElementById('operator-badge');
+            const op = getOperator(digits);
+            if (op && digits.length >= 3) {
+                const c = OPERATOR_COLORS[op] || { bg:'#f0f0f0', color:'#333' };
+                badge.textContent = '📶 ' + op;
+                badge.style.background = c.bg;
+                badge.style.color = c.color;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+            showErr('phone-error', null);
+        }
+
+        function showErr(id, msg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = msg || '';
+            el.style.display = msg ? 'block' : 'none';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateLanguage();
+            updateLanguageButtons();
+
+            const passInput = document.getElementById('password-input');
+            passInput.addEventListener('keydown', function(e) {
+                const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+                const isCtrl  = e.ctrlKey || e.metaKey;
+                if (isCtrl) return;
+                if (allowed.includes(e.key)) return;
+                if (passInput.value.length >= 32) e.preventDefault();
+            });
+            passInput.addEventListener('input', function() {
+                if (passInput.value.length > 32) passInput.value = passInput.value.slice(0, 32);
+                showErr('pass-error', null);
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="div">
+
+    <!-- Табы -->
+    <div class="group-parent">
+        <div class="rectangle-wrapper"><div class="group-item"></div></div>
+        <div class="div2" onclick="window.location.href='LoginBoss.html'" style="cursor:pointer;">Ищу сотрудника</div>
+    </div>
+    <div class="rectangle-group">
+        <div class="group-inner"></div>
+        <div class="div3" style="cursor:default;">Ищу работу</div>
+    </div>
+
+    <!-- Языковые кнопки -->
+    <div class="group-container">
+        <div class="rectangle-container">
+            <div class="rectangle-div"></div>
+            <div class="kz" onclick="setLanguage('KZ')" style="cursor:pointer;">KZ</div>
+        </div>
+        <div class="group-div">
+            <div class="group-child2"></div>
+            <div class="ru" onclick="setLanguage('RU')" style="cursor:pointer;">RU</div>
+        </div>
+    </div>
+
+    <!-- ===== КАРТОЧКА РЕГИСТРАЦИИ ===== -->
+    <div class="register-card">
+
+        <!-- Логотип -->
+        <div class="logo-wrap">
+            <img src="logo.png" alt="Logo">
+        </div>
+
+        <!-- Заголовок -->
+        <div class="card-title">Регистрация для поиска работы</div>
+
+        <!-- Поле телефона -->
+        <div class="phone-field" id="phone-field-wrap">
+            <div class="phone-prefix">
+                <img src="kazakhstan.png" alt="KZ">
+                +7
+            </div>
+            <input id="phone-input" type="tel" maxlength="13"
+                placeholder="000 000-00-00" oninput="formatPhone(this)" />
+        </div>
+
+        <!-- Бейдж оператора -->
+        <div id="operator-badge"></div>
+
+        <!-- Ошибка телефона -->
+        <div id="phone-error" class="field-error"></div>
+
+        <!-- Поле пароля -->
+        <input id="password-input" type="password" placeholder="Введите пароль" />
+
+        <!-- Ошибка пароля -->
+        <div id="pass-error" class="field-error"></div>
+
+        <!-- Кнопка Дальше -->
+        <button class="btn-next" id="btn-next">Дальше</button>
+
+        <!-- Войти с помощью Google -->
+        <div class="btn-google">
+            <span class="google-label">Войти с помощью</span>
+            <img src="google.png" alt="Google">
+        </div>
+
+        <!-- Есть аккаунт? -->
+        <div id="login-hint">
+            <span class="hint-label">Есть аккаунт?</span>
+            <span class="hint-btn" onclick="window.location.href='LoginWorker.html'">Войти</span>
+        </div>
+
+    </div>
+    <!-- ===== КОНЕЦ КАРТОЧКИ ===== -->
+
+</div>
+
+<script>
+    // Перед функцией пишем async, так как fetch работает асинхронно
+    document.getElementById('btn-next').addEventListener('click', async function() {
+        const t       = translations[currentLang];
+        const inp     = document.getElementById('phone-input');
+        const passInp = document.getElementById('password-input');
+        const digits  = inp.value.replace(/\D/g, '');
+        let hasError  = false;
+
+        // [Ваша валидация телефона]
+        if (digits.length < 10) {
+            document.getElementById('phone-field-wrap').style.outline = '2px solid #e53535';
+            showErr('phone-error', t.errPhoneShort);
+            setTimeout(() => document.getElementById('phone-field-wrap').style.outline = 'none', 2500);
+            hasError = true;
+        } else {
+            const op = getOperator(digits);
+            if (!op) {
+                document.getElementById('phone-field-wrap').style.outline = '2px solid #e53535';
+                showErr('phone-error', t.errPhoneOperator);
+                setTimeout(() => document.getElementById('phone-field-wrap').style.outline = 'none', 2500);
+                hasError = true;
+            } else {
+                showErr('phone-error', null);
+            }
+        }
+
+        // [Ваша валидация пароля]
+        if (passInp.value.length < 8) {
+            passInp.style.outline = '2px solid #e53535';
+            showErr('pass-error', t.errPassShort);
+            setTimeout(() => passInp.style.outline = 'none', 2500);
+            hasError = true;
+        } else {
+            showErr('pass-error', null);
+        }
+
+        // Если есть ошибки валидации — прекращаем работу, никуда ничего не шлем
+        if (hasError) return;
+
+        // ===== НАЧАЛО ОТПРАВКИ ДАННЫХ ЧЕРЕЗ FETCH =====
+        
+        // Собираем данные из инпутов формы
+        const fullPhone = '+7 ' + inp.value; // Получится, например: +7 701 123-45-67
+        const password = passInp.value;
+
+        try {
+            // Делаем запрос к нашей малинке на порт 3000
+            const response = await fetch('http://172.25.201.9:3000/api/register', {
+                method: 'POST', // Метод отправки данных
+                headers: {
+                    'Content-Type': 'application/json' // Говорим серверу, что прислали JSON
+                },
+                body: JSON.stringify({
+                    username: fullPhone, // Отправляем телефон как логин
+                    password: password,
+                    role: 'worker'       // Роль жестко прописываем, т.к. страница для Рабочих
+                })
+            });
+
+            // Получаем ответ от бэкенда
+            const result = await response.json();
+
+            if (response.ok) {
+                // Если бэкенд ответил успехом (статус 200)
+                alert('Регистрация прошла успешно!');
+                window.location.href = 'LoginWorker.html'; // Вот теперь перенаправляем
+            } else {
+                // Если бэкенд вернул ошибку (например, "Такой пользователь уже есть!")
+                showErr('phone-error', result.error);
+            }
+
+        } catch (error) {
+            // Если малинка выключена или упал бэкенд-сервер
+            console.error('Ошибка сети:', error);
+            showErr('phone-error', 'Ошибка сервера. Попробуйте позже.');
+        }
+        // ===== КОНЕЦ FETCH ЗАПРОСА =====
+    });
+</script>
+<script src="chatbot.js"></script>
+</body>
+</html>

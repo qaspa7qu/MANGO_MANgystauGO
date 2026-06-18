@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход для Работодателя</title>
+    <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="RegisterBoss.css" />
+    <link rel="stylesheet" href="chatbot.css">
+    <style>
+        body { margin:0; padding:0; background-color:#f4f4f4; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family: 'Public Sans', sans-serif; }
+        .login-card { width: 400px; background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        .input-field { width: 100%; height: 50px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd; padding: 0 15px; box-sizing: border-box; font-size: 16px; transition: border-color 0.2s; }
+        .input-error { border-color: #e53535 !important; outline: none; }
+        .btn-login { width: 100%; height: 50px; background-color: #ff6a00; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .btn-login:hover { background-color: #e65f00; }
+        .error-msg { color: #e53535; font-size: 14px; margin-top: -15px; margin-bottom: 15px; text-align: left; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2 style="margin-bottom: 30px;">Вход для Бизнеса</h2>
+        
+        <input type="email" id="email" class="input-field" placeholder="Электронная почта">
+        <div id="email-error" class="error-msg">Неверный email</div>
+        
+        <input type="password" id="password" class="input-field" placeholder="Пароль">
+        <div id="pass-error" class="error-msg">Неверный пароль</div>
+        
+        <button class="btn-login" onclick="handleLogin()">Войти</button>
+        <p style="margin-top: 20px;">Нет аккаунта? <a href="RegisterBoss.html" style="color: #ff6a00;">Зарегистрироваться</a></p>
+    </div>
+
+    <script>
+        // Сбрасываем стили ошибок при вводе текста, чтобы красная обводка пропадала
+        document.getElementById('email').addEventListener('input', function() {
+            this.classList.remove('input-error');
+            document.getElementById('email-error').style.display = 'none';
+        });
+        document.getElementById('password').addEventListener('input', function() {
+            this.classList.remove('input-error');
+            document.getElementById('pass-error').style.display = 'none';
+        });
+
+        async function handleLogin() {
+            const emailInput = document.getElementById('email');
+            const passInput = document.getElementById('password');
+            const emailError = document.getElementById('email-error');
+            const passError = document.getElementById('pass-error');
+
+            const email = emailInput.value.trim();
+            const pass = passInput.value;
+            
+            let hasError = false;
+
+            // Валидация на заполненность полей на фронтенде
+            if(!email) {
+                emailInput.classList.add('input-error');
+                emailError.textContent = "Введите электронную почту";
+                emailError.style.display = 'block';
+                hasError = true;
+            }
+
+            if(!pass) {
+                passInput.classList.add('input-error');
+                passError.textContent = "Введите пароль";
+                passError.style.display = 'block';
+                hasError = true;
+            }
+
+            if(hasError) return;
+
+            try {
+                // Отправляем реальный запрос на бэкенд Малинки
+                const response = await fetch('http://172.25.201.9:3000/api/worker/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include', // нужно для передачи сессий/CORS
+                    body: JSON.stringify({
+                        username: email, // Передаем email в качестве username
+                        password: pass
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Если бэкенд вернул 401 (пароль не подошел) или другую ошибку
+                    emailInput.classList.add('input-error');
+                    passInput.classList.add('input-error');
+                    emailError.textContent = data.error || "Неверный email или пароль";
+                    emailError.style.display = 'block';
+                    return;
+                }
+
+                // Если всё ок (статус 200) — сохраняем сессию и пускаем в кабинет
+                localStorage.setItem('currentUser', JSON.stringify({ type: 'boss', email: email }));
+                window.location.href = 'MainBoss.html';
+
+            } catch (error) {
+                console.error("Ошибка при запросе авторизации:", error);
+                emailError.textContent = "Нет связи с сервером Малинки";
+                emailError.style.display = 'block';
+            }
+        }
+        
+        // Привязываем функцию к глобальному окну, так как кнопка вызывает её через onclick
+        window.handleLogin = handleLogin;
+    </script>
+    
+</body>
+<script src="chatbot.js"></script>
+</html>
